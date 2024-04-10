@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import MapToolbarItem from './MapToolbarItem.vue'
+import MapToolbarItem from './MapToolbarTree.vue'
 </script>
 
 <style>
