@@ -1,12 +1,16 @@
 <template>
   <div class="toolbar">
-    <MapToolbarItem tittle="Объекты" />
-    <MapToolbarItem tittle="Техника" />
+    <MapToolbarItem tittle="Объекты" :items="objects" />
+    <MapToolbarItem tittle="Техника" :items="techich" />
   </div>
 </template>
 
 <script setup lang="ts">
+import { reactive } from 'vue'
 import MapToolbarItem from './MapToolbarTree.vue'
+
+const objects = reactive(['gz-gon'])
+const techich = reactive(['maz', 'kamaz'])
 </script>
 
 <style>

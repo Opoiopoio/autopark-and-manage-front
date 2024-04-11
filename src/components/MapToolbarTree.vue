@@ -6,22 +6,27 @@
     @mouseover="onMouseOver"
     @mouseleave="onMouseLeave"
   >
-    <h5>{{ tittle }}</h5>
-    <div class="toolbar-tree__collabse-arrow" ref="collabseArrowRef">
-      <CollabseArrow />
-    </div>
+    <did class="toolbar-tree__title">
+      <h5>{{ tittle }}</h5>
+      <div class="toolbar-tree__collabse-arrow" ref="collabseArrowRef">
+        <CollabseArrow height="20px" transform="rotate(-90)" />
+      </div>
+    </did>
     <div ref="toolbarTreeItemsRef" class="toolbar-tree__items">
-      <div class="toolbar-tree__item">Элемент 1</div>
-      <div class="toolbar-tree__item">Элемент 2</div>
-      <div class="toolbar-tree__item">Элемент 3</div>
+      <div v-for="(item, index) of items" :key="index" class="toolbar-tree__item">
+        {{ item }}
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, PropType, ref } from 'vue'
 import CollabseArrow from './CollabseArrow.vue'
-defineProps({ tittle: String })
+defineProps({
+  tittle: { type: String, required: true },
+  items: { type: Array as PropType<Array<string>>, required: true },
+})
 
 const collabseArrowRef = ref<HTMLDivElement>()
 const toolbarTreeItemsRef = ref<HTMLDivElement>()
@@ -51,6 +56,11 @@ onMounted(() => {})
 }
 
 .toolbar-tree {
+  position: relative;
+  display: inline-block;
+}
+
+.toolbar-tree__title {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -59,12 +69,25 @@ onMounted(() => {})
 
 .toolbar-tree__items {
   display: none;
+
   position: absolute;
-  background-color: #f9f9f9;
+  /* top: 32px; */
+  left: -1.5px;
+
+  background-color: var(--bg-color);
   min-width: 100%;
   overflow: auto;
   max-height: 200px;
-  z-index: 1;
+  z-index: 400;
+
+  border-radius: 0 0 0.5rem 0.5rem;
+
+  -ms-overflow-style: none;
+  /* overflow: -moz-scrollbars-none; */
+}
+
+.toolbar-tree__items::-webkit-scrollbar {
+  width: 0;
 }
 
 .toolbar-tree__item {
@@ -76,7 +99,7 @@ onMounted(() => {})
   display: block;
 }
 
-/* .reverse-rotated {
+.reverse-rotated {
   animation: rotate 0.3s ease;
   animation-direction: reverse;
 }
@@ -84,7 +107,7 @@ onMounted(() => {})
 .rotated {
   animation: rotate 0.3s ease;
   animation-fill-mode: forwards;
-} */
+}
 
 .toolbar-tree__collabse-arrow {
   display: flex;
@@ -92,7 +115,7 @@ onMounted(() => {})
   align-items: center;
 }
 
-/* @keyframes rotate {
+@keyframes rotate {
   to {
     transform: rotate(90deg);
   }
@@ -102,5 +125,5 @@ onMounted(() => {})
   to {
     transform: rotate(-90deg);
   }
-} */
+}
 </style>
