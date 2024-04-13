@@ -12,9 +12,9 @@ export const mapModule: Module<MapModule, MapModule> = {
     },
   },
   mutations: {
-    setMap(context, elem: HTMLDivElement) {
-      if (context.map == null) {
-        context.map = leaflet
+    setMap(state, elem: HTMLDivElement) {
+      if (state.map == null) {
+        state.map = leaflet
           .map(elem, { zoomControl: false })
           .setView([55.751574, 37.573856], 10)
         leaflet
@@ -23,7 +23,7 @@ export const mapModule: Module<MapModule, MapModule> = {
               // 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
               '',
           })
-          .addTo(context.map)
+          .addTo(state.map)
       }
     },
   },

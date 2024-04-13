@@ -1,9 +1,22 @@
 <template>
   <div ref="sideToolbarRef" class="side-toolbar" @animationend="animationEnd">
-    <div class="show-button-container">
-      <div class="show-button" @click="onShowButtonClick">
-        <div ref="arrowRef" class="arrow">
-          <CallabseArrow transform="rotate(90)" :x-offset="-3" />
+    <div class="relative h-100 w-100">
+      <div class="absolute h-100vh w-100">
+        <SideToolbarHeader />
+        <div class="content-container__body">
+          <CardObject />
+        </div>
+      </div>
+
+      <div class="absolute h-100vh">
+        <div class="relative h-100">
+          <div class="show-button-container">
+            <div class="show-button" @click="onShowButtonClick">
+              <div ref="arrowRef" class="arrow">
+                <CallabseArrow transform="rotate(90)" :x-offset="-3" />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -13,6 +26,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import CallabseArrow from './CollabseArrow.vue'
+import CardObject from './CardObject.vue'
+import SideToolbarHeader from './SideToolbarHeader.vue'
 
 const sideToolbarRef = ref<HTMLDivElement>()
 const arrowRef = ref<HTMLDivElement>()
@@ -67,70 +82,115 @@ function onEndReverseRotating() {
   position: fixed;
 
   right: 0px;
-  bottom: 0px;
+  top: 0px;
 
+  width: 0px;
   height: 100%;
-  width: 0;
 
   z-index: 450;
 
   background-color: var(--bg-color);
 
-  opacity: 0.9;
-}
+  /* opacity: 0.9; */
 
-.side-toolbar.opening {
-  animation: increase-width;
-  animation-duration: 1.5s;
-  animation-fill-mode: forwards;
-}
-
-.side-toolbar.save-opening {
-  width: 80vw;
+  --an-duration: 1s;
+  --an-fill-mode: forwards;
+  --full-width: 90vw;
 }
 
 .side-toolbar.closing {
   animation: increase-width;
-  animation-duration: 1.5s;
   animation-direction: reverse;
-  animation-fill-mode: forwards;
+  animation-duration: var(--an-duration);
+  animation-fill-mode: var(--an-fill-mode);
+}
+
+.side-toolbar.opening {
+  animation: increase-width;
+  animation-duration: var(--an-duration);
+  animation-fill-mode: var(--an-fill-mode);
+}
+
+.side-toolbar.save-opening {
+  width: var(--full-width);
+}
+
+.content-container__header {
+  margin-top: 20px;
+
+  display: flex;
+  flex-direction: row-reverse;
+  flex-wrap: wrap;
+  align-items: center;
+
+  gap: 12.5px;
+  padding: 12.5px;
+
+  padding: 10px;
+}
+
+.content-container__body {
+  position: relative;
+  height: 100%;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.relative {
+  position: relative;
+}
+
+.h-100 {
+  height: 100%;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.h-100vh {
+  height: 100vh;
 }
 
 .show-button-container {
-  position: relative;
+  position: absolute;
+  top: 50%;
 
-  height: 100%;
-  width: 0px;
+  transform: translateY(-50%);
 }
 
 .show-button {
   position: absolute;
-
-  top: 50%;
+  top: -32px;
   right: -32px;
-  transform: translateY(-50%);
 
   height: 64px;
   width: 64px;
 
-  background-color: var(--bg-color);
+  /* background: linear-gradient(to right, #000 50%, #fff 0.5px, var(--bg-color) 50%); */
+  background-color: #000;
 
   border: solid #fff 0.5px;
   border-radius: 100px;
 
-  z-index: 300;
+  /* z-index: 300; */
 }
 
 .arrow {
   transform-origin: center;
   height: 64px;
   width: 64px;
+
+  --an-duration: 0.2s;
+  --an-fill-mode: forwards;
 }
 
 .arrow.rotating {
   animation: rotating;
-  animation-duration: 0.3s;
-  animation-fill-mode: forwards;
+  animation-duration: var(--an-duration);
+  animation-fill-mode: var(--an-fill-mode);
 }
 
 .arrow.save-rotate {
@@ -139,9 +199,9 @@ function onEndReverseRotating() {
 
 .arrow.reverse-rotating {
   animation: rotating;
-  animation-duration: 0.3s;
   animation-direction: reverse;
-  animation-fill-mode: forwards;
+  animation-duration: var(--an-duration);
+  animation-fill-mode: var(--an-fill-mode);
 }
 
 @keyframes rotating {
@@ -159,7 +219,7 @@ function onEndReverseRotating() {
   }
 
   to {
-    width: 80vw;
+    width: var(--full-width);
   }
 }
 </style>

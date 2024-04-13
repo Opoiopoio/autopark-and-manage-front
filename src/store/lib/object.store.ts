@@ -2,9 +2,10 @@ import axios from 'axios'
 import { Marker, Map } from 'leaflet'
 import { Module } from 'vuex'
 import config from '../../config'
-import { IObject, ObjectModule } from '../../model'
+import { IObject, ObjectModule, WithName } from '../../model'
 
-export const objectModule: Module<ObjectModule, ObjectModule> = {
+export const object: Module<ObjectModule, ObjectModule> = {
+  namespaced: true,
   state: {
     objects: {},
   },
@@ -14,16 +15,25 @@ export const objectModule: Module<ObjectModule, ObjectModule> = {
     },
   },
   mutations: {
-    addObjects(state, objects: Record<string, Marker>) {
-      const objectNames = Object.keys(objects)
-
-      objectNames.forEach((objectName) => {
-        state.objects[objectName] = objects[objectName]
+    create(state, data: IObject[]) {
+      data.forEach((object) => {
+        state.objects[object.name] = initMarker(object)
+      })
+    },
+    update(state, data: IObject[]) {
+      data.forEach((object) => {
+        state.objects[object.name] = initMarker(object)
+      })
+    },
+    remove(state, data: WithName[]) {
+      data.forEach(({ name }) => {
+        delete state.objects[name]
       })
     },
   },
   actions: {
-    addObjectToMap(context, object: Marker) {
+    addToMap(context, object: Marker) {
+      console.log(object)
       const map: Map | null = context.rootGetters.map
       if (!map) {
         setTimeout(() => {
@@ -34,8 +44,10 @@ export const objectModule: Module<ObjectModule, ObjectModule> = {
       object.addTo(map)
     },
 
-    async getObjects(context) {
-      const { data } = await axios.get<IObject[]>(`${config.baseUrl}/object/list`)
+    async get(context, name: string) {
+      const { data } = await axios.get<IObject[]>(`${config.baseUrl}/object`, {
+        params: { name },
+      })
 
       const objects: Record<string, Marker> = {}
 
@@ -44,25 +56,16 @@ export const objectModule: Module<ObjectModule, ObjectModule> = {
           `<div>${object.name}</div>`
         )
 
-        context.dispatch('addObjectToMap', objects[object.name])
+        context.dispatch('addToMap', objects[object.name])
       })
 
-      context.commit('addObjects', objects)
-    },
-
-    async getObject(context, name: string) {
-      const { data: object } = await axios.get<IObject>(`${config.baseUrl}/object`, {
-        params: { name },
-      })
-
-      const objects: Record<string, Marker> = {}
-
-      objects[object.name] = new Marker(object.location).bindTooltip(
-        `<div>${object.name}</div>`
-      )
-
-      context.dispatch('addObjectToMap', objects[object.name])
-      context.commit('addObjects', objects)
+      context.commit('create', objects)
     },
   },
+}
+
+function initMarker(object: IObject) {
+  const marker = new Marker(object.location)
+  marker.bindTooltip(`<div>${object.name}</div>`)
+  return marker
 }

@@ -8,6 +8,8 @@ export interface MainState {
   objects: Record<string, Marker>
 }
 
+console.log(modules)
+
 export default new Store<MainState>({
-  modules: modules,
+  modules,
 })

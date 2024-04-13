@@ -11,12 +11,18 @@ export interface IObject {
 }
 
 export interface ITectical {
+  id: number
   mark: string
   icon: string
   driver: string
 }
 
 export interface IEmployee {
+  id: number
   name: string
   position: string
+}
+
+export interface WithName {
+  name: string
 }
