@@ -1,5 +1,5 @@
 import { Map, Icon, Marker } from 'leaflet'
-import { Store } from 'vuex'
+import { Module, Store } from 'vuex'
 import * as modules from './modules'
 
 export interface MainState {
@@ -8,8 +8,6 @@ export interface MainState {
   objects: Record<string, Marker>
 }
 
-console.log(modules)
-
 export default new Store<MainState>({
-  modules,
+  modules: modules as unknown as Record<string, Module<MainState, MainState>>,
 })

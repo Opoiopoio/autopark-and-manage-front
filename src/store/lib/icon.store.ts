@@ -4,27 +4,33 @@ import { Module } from 'vuex'
 import config from '../../config'
 import { IconModuleState, IIcon, WithName } from '../../model'
 
-export const iconModule: Module<IconModuleState, IconModuleState> = {
+export const icon: Module<IconModuleState, IconModuleState> = {
   namespaced: true,
-  state: { icons: {} },
+  state: { icons: {}, leafletIcons: {} },
   getters: {
     icons(state) {
       return state.icons
+    },
+    leafletIcons(state) {
+      return state.leafletIcons
     },
   },
   mutations: {
     create(state, data: IIcon[]) {
       data.forEach((icon) => {
-        state.icons[icon.name] = initIcon(icon)
+        state.leafletIcons[icon.name] = initIcon(icon)
+        state.icons[icon.name] = icon
       })
     },
     update(state, data: IIcon[]) {
       data.forEach((icon) => {
-        state.icons[icon.name] = initIcon(icon)
+        state.leafletIcons[icon.name] = initIcon(icon)
+        state.icons[icon.name] = icon
       })
     },
     remove(state, data: WithName[]) {
       data.forEach(({ name }) => {
+        delete state.leafletIcons[name]
         delete state.icons[name]
       })
     },

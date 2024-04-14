@@ -1,16 +1,9 @@
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  /* line-height: 1.5; */
+  font-family: 'Segoe UI', Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   font-weight: 400;
 
-  /* color-scheme: light dark; */
   color: var(--ft-color);
   background-color: var(--bg-color);
-
-  /* font-synthesis: none; */
-  /* text-rendering: optimizeLegibility; */
-  /* -webkit-font-smoothing: antialiased; */
-  /* -moz-osx-font-smoothing: grayscale; */
 }
 
 body {
@@ -21,7 +14,26 @@ body {
 
 :root {
   --bg-color: #242424;
+  --main-color: #396ca3;
+  --sub-color: #a3396c;
+  --accent-color: #6ca339;
+  --main-monochrome: #598dc5;
+  --card-bg-color: rgb();
   --ft-color: rgba(255, 255, 255, 0.87);
+}
+
+button {
+  background-color: var(--main-color);
+  color: #fff;
+
+  border: none;
+
+  padding: 10px 20px;
+  border-radius: 5px;
+
+  cursor: pointer;
+
+  font-size: 16px;
 }
 
 @media (prefers-color-scheme: light) {

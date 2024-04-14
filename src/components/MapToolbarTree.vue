@@ -6,12 +6,12 @@
     @mouseover="onMouseOver"
     @mouseleave="onMouseLeave"
   >
-    <did class="toolbar-tree__title">
-      <h5>{{ tittle }}</h5>
+    <div class="toolbar-tree__title">
+      <h5>{{ name }}</h5>
       <div class="toolbar-tree__collabse-arrow" ref="collabseArrowRef">
         <CollabseArrow height="20px" transform="rotate(-90)" />
       </div>
-    </did>
+    </div>
     <div ref="toolbarTreeItemsRef" class="toolbar-tree__items">
       <div v-for="(item, index) of items" :key="index" class="toolbar-tree__item">
         {{ item }}
@@ -24,7 +24,7 @@
 import { onMounted, PropType, ref } from 'vue'
 import CollabseArrow from './CollabseArrow.vue'
 defineProps({
-  tittle: { type: String, required: true },
+  name: { type: String, required: true },
   items: { type: Array as PropType<Array<string>>, required: true },
 })
 
@@ -74,7 +74,7 @@ onMounted(() => {})
   /* top: 32px; */
   left: -1.5px;
 
-  background-color: var(--bg-color);
+  background-color: var(--main-color);
   min-width: 100%;
   overflow: auto;
   max-height: 200px;
@@ -83,7 +83,7 @@ onMounted(() => {})
   border-radius: 0 0 0.5rem 0.5rem;
 
   -ms-overflow-style: none;
-  /* overflow: -moz-scrollbars-none; */
+  overflow: -moz-scrollbars-none;
 }
 
 .toolbar-tree__items::-webkit-scrollbar {

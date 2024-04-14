@@ -1,10 +1,39 @@
 <template>
-  <div ref="sideToolbarRef" class="side-toolbar" @animationend="animationEnd">
+  <div
+    class="side-toolbar"
+    :class="{
+      'side-toolbar_opened': isOpened,
+      'side-toolbar_opening': isOpening,
+      'side-toolbar_closing': isClosing,
+    }"
+    @animationend="onToolbarAnimationEnd"
+    @keyup.esc="onShowButtonClick"
+  >
     <div class="relative h-100 w-100">
-      <div class="absolute h-100vh w-100">
-        <SideToolbarHeader />
-        <div class="content-container__body">
-          <CardObject />
+      <div
+        class="content-box"
+        @animationend="onContentAnimationEnd"
+        :class="{
+          'content-box_showed': contentIsShowed,
+          'content-box_showing-up': contentIsShowingUp,
+          'content-box_hiding': contentIsHiding,
+        }"
+      >
+        <SideToolbarHeader :items="headerItems" />
+        <div class="content-box__body">
+          <CardsContainer :items="objects" template="item">
+            <template #item="{ item }">
+              <CardObject
+                :complete_status="item.complete_status"
+                :edited_date="item.edited_date"
+                :image="item.icon"
+                :location="item.location"
+                :manager="item.manager"
+                :technical="item.technical"
+                :name="item.name"
+              />
+            </template>
+          </CardsContainer>
         </div>
       </div>
 
@@ -12,7 +41,15 @@
         <div class="relative h-100">
           <div class="show-button-container">
             <div class="show-button" @click="onShowButtonClick">
-              <div ref="arrowRef" class="arrow">
+              <div
+                @animationend="onArrowAnimationEnd"
+                class="arrow"
+                :class="{
+                  arrow_rotated: arrowIsRotated,
+                  arrow_rotating: arrowIsRotating,
+                  'arrow_reverse-rotating': arrowIsReverseRotating,
+                }"
+              >
                 <CallabseArrow transform="rotate(90)" :x-offset="-3" />
               </div>
             </div>
@@ -24,56 +61,96 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import CallabseArrow from './CollabseArrow.vue'
-import CardObject from './CardObject.vue'
-import SideToolbarHeader from './SideToolbarHeader.vue'
+import { computed, Ref, ref } from 'vue'
+import { useStore } from 'vuex'
 
-const sideToolbarRef = ref<HTMLDivElement>()
-const arrowRef = ref<HTMLDivElement>()
+import CallabseArrow from './CollabseArrow.vue'
+import SideToolbarHeader from './SideToolbarHeader.vue'
+import CardsContainer from './CardsContainer.vue'
+import CardObject from './card-object/CardObject.vue'
+
+import { IObject, IToolbarHeaderItem } from '../model'
+// import { ITectical } from '../model'
+
+const store = useStore()
+
+const headerItems: Ref<IToolbarHeaderItem[]> = ref([
+  { tittle: 'Объекты' },
+  { tittle: 'Иконки' },
+  { tittle: 'Работники' },
+  { tittle: 'Техника' },
+  { tittle: 'Оборудование' },
+])
+
+store.dispatch('technical/get')
+store.dispatch('object/get')
+
+// const technical = computed(() => {
+//   const technic = store.getters['technical/technical']
+//   return Object.values<ITectical>(technic)
+// })
+
+const objects = computed(() => {
+  const technic = store.getters['object/objects']
+  return Object.values<IObject>(technic)
+})
+
+const isOpened = ref(false)
+const isClosing = ref(false)
+const isOpening = ref(false)
+
+const contentIsShowed = ref(false)
+const contentIsShowingUp = ref(false)
+const contentIsHiding = ref(false)
+
+const arrowIsRotated = ref(false)
+const arrowIsRotating = ref(false)
+const arrowIsReverseRotating = ref(false)
 
 function onShowButtonClick() {
-  if (sideToolbarRef.value?.classList.contains('save-opening')) {
-    sideToolbarRef.value.classList.add('closing')
+  if (isOpened.value) {
+    contentIsHiding.value = true
+    isClosing.value = true
   } else {
-    sideToolbarRef.value?.classList.add('opening')
+    isOpening.value = true
   }
 }
 
-function animationEnd(e: AnimationEvent) {
-  const isRotating = arrowRef.value?.classList.contains('rotating')
-  const isReverseRotating = arrowRef.value?.classList.contains('reverse-rotating')
-  if (e.target == arrowRef.value && isRotating) {
-    onEndRorating()
-  } else if (e.target == arrowRef.value && isReverseRotating) {
-    onEndReverseRotating()
-  } else if (sideToolbarRef.value?.classList.contains('opening')) {
-    onEndOpening()
+function onToolbarAnimationEnd(e: AnimationEvent) {
+  if (e.animationName != 'increase-width') return
+  else if (isOpening.value) {
+    isOpened.value = true
+    isOpening.value = false
+    arrowIsRotating.value = true
+    contentIsShowingUp.value = true
   } else {
-    onEndClosing()
+    isOpened.value = false
+    isClosing.value = false
+
+    arrowIsReverseRotating.value = true
   }
 }
 
-function onEndOpening() {
-  sideToolbarRef.value?.classList.add('save-opening')
-  sideToolbarRef.value?.classList.remove('opening')
-  arrowRef.value?.classList.add('rotating')
+function onContentAnimationEnd(e: AnimationEvent) {
+  if (e.animationName != 'show-content') return
+  else if (contentIsShowingUp.value) {
+    contentIsShowed.value = true
+    contentIsShowingUp.value = false
+  } else if (contentIsHiding.value) {
+    contentIsShowed.value = false
+    contentIsHiding.value = false
+  }
 }
 
-function onEndClosing() {
-  sideToolbarRef.value?.classList.remove('save-opening')
-  sideToolbarRef.value?.classList.remove('closing')
-  arrowRef.value?.classList.add('reverse-rotating')
-}
-
-function onEndRorating() {
-  arrowRef.value?.classList.add('save-rotate')
-  arrowRef.value?.classList.remove('rotating')
-}
-
-function onEndReverseRotating() {
-  arrowRef.value?.classList.remove('save-rotate')
-  arrowRef.value?.classList.remove('reverse-rotating')
+function onArrowAnimationEnd(e: AnimationEvent) {
+  if (e.animationName != 'rotating') return
+  else if (arrowIsRotating.value) {
+    arrowIsRotated.value = true
+    arrowIsRotating.value = false
+  } else if (arrowIsReverseRotating.value) {
+    arrowIsReverseRotating.value = false
+    arrowIsRotated.value = false
+  }
 }
 </script>
 
@@ -89,8 +166,7 @@ function onEndReverseRotating() {
 
   z-index: 450;
 
-  background-color: var(--bg-color);
-
+  backdrop-filter: blur(20px);
   /* opacity: 0.9; */
 
   --an-duration: 1s;
@@ -98,40 +174,59 @@ function onEndReverseRotating() {
   --full-width: 90vw;
 }
 
-.side-toolbar.closing {
+.side-toolbar_closing {
   animation: increase-width;
   animation-direction: reverse;
   animation-duration: var(--an-duration);
   animation-fill-mode: var(--an-fill-mode);
 }
 
-.side-toolbar.opening {
+.side-toolbar_opening {
   animation: increase-width;
   animation-duration: var(--an-duration);
   animation-fill-mode: var(--an-fill-mode);
 }
 
-.side-toolbar.save-opening {
+.side-toolbar_opened {
   width: var(--full-width);
 }
 
-.content-container__header {
-  margin-top: 20px;
+.content-box {
+  position: absolute;
+  height: calc(100% - 60px);
+  width: calc(100% - 60px);
+  display: none;
 
-  display: flex;
-  flex-direction: row-reverse;
-  flex-wrap: wrap;
-  align-items: center;
+  padding: 30px;
 
-  gap: 12.5px;
-  padding: 12.5px;
-
-  padding: 10px;
+  --an-duration: 0.3s;
+  --an-fill-mode: forwards;
 }
 
-.content-container__body {
-  position: relative;
-  height: 100%;
+.content-box_showing-up {
+  animation: show-content;
+  animation-duration: var(--an-duration);
+  animation-fill-mode: var(--an-fill-mode);
+  display: block;
+}
+
+.content-box_showed {
+  opacity: 1;
+  display: block;
+}
+
+.content-box_hiding {
+  animation: show-content;
+  animation-duration: var(--an-duration);
+  animation-fill-mode: var(--an-fill-mode);
+  animation-direction: reverse;
+}
+
+.content-box__body {
+  height: calc(100% - 55px);
+  margin: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .absolute {
@@ -163,14 +258,14 @@ function onEndReverseRotating() {
 
 .show-button {
   position: absolute;
-  top: -32px;
-  right: -32px;
+  top: -22.5px;
+  right: -22.5px;
 
-  height: 64px;
-  width: 64px;
+  height: 45px;
+  width: 45px;
 
   /* background: linear-gradient(to right, #000 50%, #fff 0.5px, var(--bg-color) 50%); */
-  background-color: #000;
+  background-color: var(--main-color);
 
   border: solid #fff 0.5px;
   border-radius: 100px;
@@ -178,26 +273,30 @@ function onEndReverseRotating() {
   /* z-index: 300; */
 }
 
+.show-button:hover {
+  background-color: var(--main-monochrome);
+}
+
 .arrow {
   transform-origin: center;
-  height: 64px;
-  width: 64px;
+  height: 100%;
+  width: 100%;
 
   --an-duration: 0.2s;
   --an-fill-mode: forwards;
 }
 
-.arrow.rotating {
+.arrow_rotating {
   animation: rotating;
   animation-duration: var(--an-duration);
   animation-fill-mode: var(--an-fill-mode);
 }
 
-.arrow.save-rotate {
+.arrow_rotated {
   transform: rotate(180deg);
 }
 
-.arrow.reverse-rotating {
+.arrow_reverse-rotating {
   animation: rotating;
   animation-direction: reverse;
   animation-duration: var(--an-duration);
@@ -220,6 +319,15 @@ function onEndReverseRotating() {
 
   to {
     width: var(--full-width);
+  }
+}
+
+@keyframes show-content {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 </style>

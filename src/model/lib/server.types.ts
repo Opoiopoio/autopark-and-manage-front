@@ -4,17 +4,22 @@ export interface IIcon {
 }
 
 export interface IObject {
+  icon: string
   name: string
   manager: string
   technical: ITectical[]
   location: [number, number]
+  complete_status: number
+  edited_date: Date
 }
 
 export interface ITectical {
   id: number
   mark: string
   icon: string
+  number: string
   driver: string
+  location: [number, number]
 }
 
 export interface IEmployee {
@@ -25,4 +30,8 @@ export interface IEmployee {
 
 export interface WithName {
   name: string
+}
+
+export interface WithNumber {
+  number: string
 }

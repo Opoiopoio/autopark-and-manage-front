@@ -18,17 +18,17 @@ onMounted(() => {
   if (!mapRef.value) return
   store.commit('setMap', mapRef.value)
 
-  const qwe = new MarkerIcon({ mainColor: '#123123' }) as string
+  const image = new MarkerIcon() as string
 
   const iconMarker = leaflet.icon({
-    iconUrl: qwe,
+    iconUrl: image,
     iconSize: [32, 32],
     iconAnchor: [16, 32],
   })
 
   const marker = leaflet
     .marker([55.751574, 37.573856], { icon: iconMarker, draggable: true })
-    .bindPopup('<div>Ваш текст подсказки</div>')
+    .bindTooltip('<div>Ваш текст подсказки</div>')
 
   store.dispatch('object/addToMap', marker)
 
