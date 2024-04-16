@@ -14,8 +14,8 @@ body {
 
 :root {
   --bg-color: #242424;
-  --main-color: #396ca3;
-  --main-monochrome: #598dc5;
+  /* --main-color: #396ca3;
+  --main-monochrome: #598dc5; */
   --main-darken: #2061b5;
   --sub-color: #a3396c;
   --accent-color: #6ca339;
