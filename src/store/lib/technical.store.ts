@@ -38,7 +38,6 @@ export const technical: Module<TechnicalModule, TechnicalModule> = {
   },
   actions: {
     async get(context, name: string) {
-      console.log(import.meta.env.DEV)
       if (import.meta.env.DEV) {
         context.commit('create', [
           {

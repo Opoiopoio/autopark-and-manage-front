@@ -19,10 +19,10 @@
           'content-box_hiding': contentIsHiding,
         }"
       >
-        <SideToolbarHeader :items="headerItems" />
+        <SideToolbarHeader :menu-items="headerMenuItems" :items="headerItems" />
         <div class="content-box__body">
           <CardsContainer :items="objects" template="item">
-            <template #item="{ item }">
+            <template #[resourceTemplates.object]="{ item }">
               <CardObject
                 :complete_status="item.complete_status"
                 :edited_date="item.edited_date"
@@ -40,7 +40,7 @@
       <div class="absolute h-100vh">
         <div class="relative h-100">
           <div class="show-button-container">
-            <div class="show-button" @click="onShowButtonClick">
+            <div class="show-button" tabindex="1" @click="onShowButtonClick">
               <div
                 @animationend="onArrowAnimationEnd"
                 class="arrow"
@@ -61,7 +61,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, Ref, ref } from 'vue'
+import { computed, reactive, Ref, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 
 import CallabseArrow from './CollabseArrow.vue'
@@ -69,17 +69,56 @@ import SideToolbarHeader from './SideToolbarHeader.vue'
 import CardsContainer from './CardsContainer.vue'
 import CardObject from './card-object/CardObject.vue'
 
-import { IObject, IToolbarHeaderItem } from '../model'
-// import { ITectical } from '../model'
+import {
+  IObject,
+  IToolbarHeaderItem,
+  Resources,
+  ResourceStatuses,
+  ResourceTemplates,
+  TemplateNames,
+  ToolbarHeaderItem,
+} from '../model'
+
+const resourceStatuses = reactive<Record<Resources, boolean>>(new ResourceStatuses())
+
+const activeField = computed<Resources>((getter) => {
+  const trueValues = Object.values(resourceStatuses).filter((value) => value == true)
+  const keys = Object.keys(resourceStatuses) as Resources[]
+
+  oldValue = getter
+
+  if (trueValues.length == 1)
+    return keys.find((key) => resourceStatuses[key]) as Resources
+  else return keys.find((key) => key != getter && resourceStatuses[key]) as Resources
+})
+
+const resourceTemplates = computed<Record<Resources, TemplateNames>>(() => {
+  const result = new ResourceTemplates(resourceStatuses)
+  console.log(result)
+  return result
+})
+
+let oldValue: Resources | undefined
+
+watch(
+  () => activeField,
+  () => {
+    if (Object.values(resourceStatuses).filter((value) => value == true).length == 1)
+      return
+    else if (oldValue) resourceStatuses[oldValue] = false
+  },
+  { deep: true }
+)
 
 const store = useStore()
+const headerItems = ['Огранизация', 'qewr']
 
-const headerItems: Ref<IToolbarHeaderItem[]> = ref([
-  { tittle: 'Объекты' },
-  { tittle: 'Иконки' },
-  { tittle: 'Работники' },
-  { tittle: 'Техника' },
-  { tittle: 'Оборудование' },
+const headerMenuItems: Ref<IToolbarHeaderItem[]> = ref([
+  new ToolbarHeaderItem('Объекты', resourceStatuses, 'object'),
+  new ToolbarHeaderItem('Иконки', resourceStatuses, 'icon'),
+  new ToolbarHeaderItem('Работники', resourceStatuses, 'employee'),
+  new ToolbarHeaderItem('Техника', resourceStatuses, 'tecnical'),
+  new ToolbarHeaderItem('Оборудование', resourceStatuses, 'equipment'),
 ])
 
 store.dispatch('technical/get')
@@ -132,7 +171,7 @@ function onToolbarAnimationEnd(e: AnimationEvent) {
 }
 
 function onContentAnimationEnd(e: AnimationEvent) {
-  if (e.animationName != 'show-content') return
+  if (e.animationName != 'fade') return
   else if (contentIsShowingUp.value) {
     contentIsShowed.value = true
     contentIsShowingUp.value = false
@@ -197,6 +236,8 @@ function onArrowAnimationEnd(e: AnimationEvent) {
   width: calc(100% - 60px);
   display: none;
 
+  color: var(--ft-dark-color);
+
   padding: 30px;
 
   --an-duration: 0.3s;
@@ -204,7 +245,7 @@ function onArrowAnimationEnd(e: AnimationEvent) {
 }
 
 .content-box_showing-up {
-  animation: show-content;
+  animation: fade;
   animation-duration: var(--an-duration);
   animation-fill-mode: var(--an-fill-mode);
   display: block;
@@ -216,7 +257,7 @@ function onArrowAnimationEnd(e: AnimationEvent) {
 }
 
 .content-box_hiding {
-  animation: show-content;
+  animation: fade;
   animation-duration: var(--an-duration);
   animation-fill-mode: var(--an-fill-mode);
   animation-direction: reverse;
@@ -304,7 +345,7 @@ function onArrowAnimationEnd(e: AnimationEvent) {
 }
 
 @keyframes rotating {
-  0% {
+  from {
     transform: rotate(0deg);
   }
   to {
@@ -321,13 +362,5 @@ function onArrowAnimationEnd(e: AnimationEvent) {
     width: var(--full-width);
   }
 }
-
-@keyframes show-content {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
 </style>
+, Resources, TemplateNames, Resources, TemplateNames

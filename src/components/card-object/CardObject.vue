@@ -75,7 +75,7 @@ const completeStatusNoteStyle = computed(() => {
 
   /* backdrop-filter: blur(20px); */
 
-  color: rgb(92, 92, 92);
+  /* color: var(--ft-light-color); */
   box-shadow: 0px 2px 10px gray;
 
   padding: 20px;
@@ -101,7 +101,7 @@ const completeStatusNoteStyle = computed(() => {
 .card-object__image-container > h4 {
   position: absolute;
 
-  color: #fff;
+  color: var(--ft-light-color);
 
   bottom: 20px;
   margin: var(--items-margin);

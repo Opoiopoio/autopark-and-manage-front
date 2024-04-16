@@ -10,11 +10,9 @@
 import { PropType } from 'vue'
 import { IObject, ITectical } from '../model'
 
-const props = defineProps({
+defineProps({
   items: Array as PropType<Partial<IObject & ITectical>[]>,
 })
-
-console.log(props.items)
 </script>
 
 <style>
@@ -33,8 +31,5 @@ console.log(props.items)
 
 .cards-container::-webkit-scrollbar {
   width: 0;
-}
-
-@media screen {
 }
 </style>

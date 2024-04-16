@@ -43,7 +43,6 @@ const props = defineProps({
 const store = useStore()
 
 const isShowed = computed(() => {
-  console.log(props.items?.length)
   return props.items?.length != 0
 })
 
@@ -142,13 +141,13 @@ function onHeaderClick() {
 
 .technical__items_showind-up {
   display: block;
-  animation: show-items;
+  animation: fade;
   animation-duration: var(--an-duration);
   animation-fill-mode: var(--an-fill-mode);
 }
 
 .technical__items_hiding {
-  animation: show-items;
+  animation: fade;
   animation-duration: var(--an-duration);
   animation-fill-mode: var(--an-fill-mode);
   animation-direction: reverse;
@@ -166,14 +165,5 @@ function onHeaderClick() {
 .technical__item__mark,
 .technical__item__driver {
   margin: 5px 0;
-}
-
-@keyframes show-items {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
 }
 </style>
