@@ -1,8 +1,8 @@
 import axios from 'axios'
-import { Marker, Map } from 'leaflet'
-import { Module } from 'vuex'
+import { Marker } from 'leaflet'
+import { ActionContext, Module } from 'vuex'
 import config from '../../config'
-import { IObject, ITectical, ObjectModule, WithName } from '../../model'
+import { IObject, ITectical, ObjectState, WithName } from '../../model'
 import { computed } from 'vue'
 
 import icon1 from '../../assets/758y1j9kmRM.jpg'
@@ -12,7 +12,9 @@ import icon4 from '../../assets/Wcol2u3vAiQ.jpg'
 import icon5 from '../../assets/czNCiKQhOK4.jpg'
 import icon6 from '../../assets/item_417.jpg'
 
-export const object: Module<ObjectModule, ObjectModule> = {
+import { MarkerToObject } from '../../utils'
+
+export const object: Module<ObjectState, ObjectState> = {
   namespaced: true,
   state: {
     objects: {},
@@ -24,51 +26,32 @@ export const object: Module<ObjectModule, ObjectModule> = {
     },
   },
   mutations: {
-    create(state, data: IObject[]) {
-      data.forEach((object) => {
-        state.objectMarkers[object.name] = initMarker(object)
-        state.objects[object.name] = object
-      })
+    addMarker(state, { marker, name }: { marker: Marker; name: string }) {
+      state.objectMarkers[name] = marker
     },
-    update(state, data: IObject[]) {
-      data.forEach((object) => {
-        state.objectMarkers[object.name] = initMarker(object)
-        state.objects[object.name] = object
-      })
+    addObject(state, object: IObject) {
+      state.objects[object.name] = object
     },
-    remove(state, data: WithName[]) {
-      data.forEach(({ name }) => {
-        delete state.objectMarkers[name]
-        delete state.objects[name]
-      })
+    removeMarker(state, markerName: string) {
+      delete state.objectMarkers[markerName]
+    },
+    removeObject(state, objectName: string) {
+      delete state.objects[objectName]
     },
   },
   actions: {
-    addToMap(context, object: Marker) {
-      const map: Map | null = context.rootGetters.map
-      if (!map) {
-        setTimeout(() => {
-          if (map) {
-            object.addTo(map)
-            object.dragging?.disable()
-          }
-        }, 500)
-        return
-      }
-      object.addTo(map)
-    },
-
     async get(context, name: string) {
+      let data: IObject[] = []
       if (import.meta.env.DEV) {
         const technical = computed(() =>
           Object.values<ITectical>(context.rootGetters['technical/technical'])
         )
-        context.commit('create', [
+        data = [
           {
             icon: icon1,
             name: 'Объект 1',
             manager: 'Остапчук Семен Тимофеевич',
-            location: [55.751574, 37.573856],
+            location: [56, 37.574],
             complete_status: 10,
             technical: technical.value,
             edited_date: new Date(),
@@ -154,21 +137,53 @@ export const object: Module<ObjectModule, ObjectModule> = {
             technical: technical.value,
             edited_date: new Date(),
           },
-        ])
-        return
+        ]
       }
 
-      const { data } = await axios.get<IObject[]>(`${config.baseUrl}/object`, {
-        params: { name },
-      })
+      data =
+        data ??
+        (await axios
+          .get<IObject[]>(`${config.baseUrl}/object`, {
+            params: { name },
+          })
+          .then((res) => res.data))
 
-      context.commit('create', data)
+      context.dispatch('create', data)
+    },
+
+    create(context, data: IObject[]) {
+      data.forEach((object) => {
+        onAddOrChangeObject(context, object)
+      })
+    },
+    update(context, data: IObject[]) {
+      data.forEach((object) => {
+        context.dispatch('removeMarker', context.state.objectMarkers[object.name], {
+          root: true,
+        })
+
+        onAddOrChangeObject(context, object)
+      })
+    },
+    remove(context, data: WithName[]) {
+      data.forEach(({ name }) => {
+        context.dispatch('removeMarker', context.state.objectMarkers[name], {
+          root: true,
+        })
+
+        context.commit('removeMarker', name)
+        context.commit('removeObject', name)
+      })
     },
   },
 }
 
-function initMarker(object: IObject) {
-  const marker = new Marker(object.location)
-  marker.bindTooltip(`<div>${object.name}</div>`)
-  return marker
+function onAddOrChangeObject(
+  context: ActionContext<ObjectState, ObjectState>,
+  object: IObject
+) {
+  const marker = new MarkerToObject(object)
+  context.commit('addMarker', { marker, name: object.name })
+  context.commit('addObject', object)
+  context.dispatch('addMarker', marker, { root: true })
 }

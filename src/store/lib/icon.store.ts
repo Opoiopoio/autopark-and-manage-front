@@ -1,38 +1,25 @@
 import axios from 'axios'
-import { Icon } from 'leaflet'
 import { Module } from 'vuex'
 import config from '../../config'
-import { IconModuleState, IIcon, WithName } from '../../model'
+import { IconState, IIcon, WithName } from '../../model'
 
-export const icon: Module<IconModuleState, IconModuleState> = {
+export const icon: Module<IconState, IconState> = {
   namespaced: true,
-  state: { icons: {}, leafletIcons: {} },
+  state: { icons: {} },
   getters: {
     icons(state) {
       return state.icons
     },
-    leafletIcons(state) {
-      return state.leafletIcons
-    },
+    // leafletIcons(state) {
+    //   return state.leafletIcons
+    // },
   },
   mutations: {
-    create(state, data: IIcon[]) {
-      data.forEach((icon) => {
-        state.leafletIcons[icon.name] = initIcon(icon)
-        state.icons[icon.name] = icon
-      })
+    addIcon(state, icon: IIcon) {
+      state.icons[icon.name] = icon
     },
-    update(state, data: IIcon[]) {
-      data.forEach((icon) => {
-        state.leafletIcons[icon.name] = initIcon(icon)
-        state.icons[icon.name] = icon
-      })
-    },
-    remove(state, data: WithName[]) {
-      data.forEach(({ name }) => {
-        delete state.leafletIcons[name]
-        delete state.icons[name]
-      })
+    rempveIcon(state, iconName: string) {
+      delete state.icons[iconName]
     },
   },
   actions: {
@@ -41,15 +28,33 @@ export const icon: Module<IconModuleState, IconModuleState> = {
         params: { name },
       })
 
-      context.commit('create', data)
+      context.dispatch('add', data)
+    },
+
+    create(context, data: IIcon[]) {
+      data.forEach((icon) => {
+        // context.state.leafletIcons[icon.name] = initIcon(icon)
+        context.commit('addIcon', icon)
+      })
+    },
+    update(context, data: IIcon[]) {
+      data.forEach((icon) => {
+        // context.leafletIcons[icon.name] = initIcon(icon)
+        context.commit('addIcon', icon)
+      })
+    },
+    remove(context, data: WithName[]) {
+      data.forEach(({ name }) => {
+        context.commit('addIcon', name)
+      })
     },
   },
 }
 
-function initIcon(icon: IIcon) {
-  return new Icon({
-    iconUrl: icon.url,
-    iconSize: [32, 32],
-    iconAnchor: [16, 32],
-  })
-}
+// function initIcon(icon: IIcon) {
+//   return new Icon({
+//     iconUrl: icon.url,
+//     iconSize: [32, 32],
+//     iconAnchor: [16, 32],
+//   })
+// }

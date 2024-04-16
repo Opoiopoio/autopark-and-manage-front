@@ -1,20 +1,27 @@
-import { Icon, Map, Marker } from 'leaflet'
+import { Map, Marker } from 'leaflet'
 import { IIcon, IObject, ITectical } from './server.types'
 
-export interface IconModuleState {
+export interface IconState {
   icons: Record<string, IIcon>
-  leafletIcons: Record<string, Icon>
+  // leafletIcons: Record<string, Icon>
 }
-export interface MapModule {
+export interface MapState {
   map: null | Map
 }
 
-export interface ObjectModule {
+export interface ObjectState {
   objects: Record<string, IObject>
   objectMarkers: Record<string, Marker>
 }
 
-export interface TechnicalModule {
+export interface TechnicalState {
   technical: Record<string, ITectical>
   technicalMarker: Record<string, Marker>
+}
+
+export interface AuthState {
+  markerColor: string | null
+  name: string | null
+  accessToken: string | null
+  refreshToken: string | null
 }

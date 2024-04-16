@@ -13,7 +13,7 @@ class WebsocketClient {
     return (msg) => {
       const data = new ServerResponse(JSON.parse(msg.data))
 
-      store.commit(`${data.resource}/${data.type}`)
+      store.dispatch(`${data.resource}/${data.type}`)
     }
   }
 

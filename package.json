@@ -6,9 +6,13 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "eslint ."
   },
   "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.7.0",
+    "@typescript-eslint/parser": "^7.7.0",
+    "@vue/eslint-config-typescript": "^13.0.0",
     "axios": "^1.6.8",
     "leaflet": "^1.9.4",
     "leaflet-tilelayer-mbtiles": "^1.4.1",

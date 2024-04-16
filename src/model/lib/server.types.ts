@@ -26,6 +26,7 @@ export interface IEmployee {
   id: number
   name: string
   position: string
+  marker_color: string
 }
 
 export interface WithName {

@@ -1,11 +1,11 @@
 import axios from 'axios'
-import { Icon, Marker } from 'leaflet'
-import { Module } from 'vuex'
+import { ActionContext, Module } from 'vuex'
 import config from '../../config'
-import { ITectical, TechnicalModule, WithNumber } from '../../model'
-import { MarkerIcon } from '../../utils'
+import { ITectical, TechnicalState, WithNumber } from '../../model'
+import { MarkerIcon, MarkerToTecnical } from '../../utils'
+import { Marker } from 'leaflet'
 
-export const technical: Module<TechnicalModule, TechnicalModule> = {
+export const technical: Module<TechnicalState, TechnicalState> = {
   namespaced: true,
   state: { technical: {}, technicalMarker: {} },
   getters: {
@@ -17,29 +17,25 @@ export const technical: Module<TechnicalModule, TechnicalModule> = {
     },
   },
   mutations: {
-    create(state, data: ITectical[]) {
-      data.forEach((technic) => {
-        state.technicalMarker[technic.number] = initMarker(technic)
-        state.technical[technic.number] = technic
-      })
+    addMarker(state, { marker, number }: { marker: Marker; number: string }) {
+      state.technicalMarker[number] = marker
     },
-    update(state, data: ITectical[]) {
-      data.forEach((technic) => {
-        state.technicalMarker[technic.number] = initMarker(technic)
-        state.technical[technic.number] = technic
-      })
+    addTechnic(state, technic: ITectical) {
+      state.technical[technic.number] = technic
     },
-    remove(state, data: WithNumber[]) {
-      data.forEach(({ number }) => {
-        delete state.technicalMarker[number]
-        delete state.technicalMarker[number]
-      })
+    removeMarker(state, markerName: string) {
+      delete state.technicalMarker[markerName]
+    },
+    removeTechnic(state, technicalNumber: string) {
+      delete state.technical[technicalNumber]
     },
   },
   actions: {
     async get(context, name: string) {
+      let tech: ITectical[] = []
+
       if (import.meta.env.DEV) {
-        context.commit('create', [
+        tech = [
           {
             id: 1,
             driver: 'Остапчук Семен Тимофеевич',
@@ -56,21 +52,50 @@ export const technical: Module<TechnicalModule, TechnicalModule> = {
             location: [55.751574, 37.573856],
             number: 'X123QW37',
           },
-        ])
-        return
+        ]
       }
 
-      const { data } = await axios.get<ITectical[]>(`${config.baseUrl}/tecnical`, {
-        params: { name },
-      })
+      tech =
+        tech ??
+        (await axios
+          .get<ITectical[]>(`${config.baseUrl}/tecnical`, { params: { name } })
+          .then((res) => res.data))
 
-      context.commit('create', data)
+      context.dispatch('create', tech)
+    },
+
+    create(context, data: ITectical[]) {
+      data.forEach((technic) => {
+        onAddOrChangeTechnic(context, technic)
+      })
+    },
+    update(context, data: ITectical[]) {
+      data.forEach((technic) => {
+        context.dispatch('removeMarker', context.state.technicalMarker[technic.number], {
+          root: true,
+        })
+        onAddOrChangeTechnic(context, technic)
+      })
+    },
+    remove(context, data: WithNumber[]) {
+      data.forEach(({ number }) => {
+        context.dispatch('removeMarker', context.state.technicalMarker[number], {
+          root: true,
+        })
+        context.commit('removeMarker', number)
+        context.commit('removeTechnic', number)
+      })
     },
   },
 }
 
-function initMarker(technical: ITectical) {
-  return new Marker(technical.location, {
-    icon: new Icon({ iconSize: [32, 32], iconAnchor: [16, 32] }),
-  })
+function onAddOrChangeTechnic(
+  context: ActionContext<TechnicalState, TechnicalState>,
+  tectical: ITectical
+) {
+  const marker = new MarkerToTecnical(tectical)
+  context.commit('addMarker', { marker, number: tectical.number })
+  context.commit('addTechnic', tectical)
+
+  context.dispatch('addMarker', marker, { root: true })
 }

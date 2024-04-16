@@ -1,8 +1,8 @@
 import { Module } from 'vuex'
-import leaflet from 'leaflet'
-import { MapModule } from '../../model'
+import leaflet, { Marker, Map } from 'leaflet'
+import { MapState } from '../../model'
 
-export const mapModule: Module<MapModule, MapModule> = {
+export const mapModule: Module<MapState, MapState> = {
   state: {
     map: null,
   },
@@ -30,15 +30,36 @@ export const mapModule: Module<MapModule, MapModule> = {
   },
   actions: {
     flyTo(context, location: [number, number]) {
-      console.log(location)
-
-      document.querySelector('.show-button')?.dispatchEvent(new MouseEvent('click'))
+      document.querySelector('#show-button')?.dispatchEvent(new MouseEvent('click'))
 
       try {
         context.state.map?.flyTo(location, 15)
       } catch (error) {
         console.error(error)
       }
+    },
+
+    addMarker(context, marker: Marker) {
+      const map = context.state.map
+
+      console.log(map)
+
+      if (!map) {
+        this.watch(
+          (state) => state.map,
+          (value) => {
+            console.log('watch', value)
+            marker.addTo(value as Map)
+          },
+          { once: true }
+        )
+        return
+      }
+      marker.addTo(map)
+    },
+
+    removeMarker(context, marker: Marker) {
+      context.state.map?.removeLayer(marker)
     },
   },
 }

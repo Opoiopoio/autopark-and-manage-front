@@ -40,7 +40,12 @@
       <div class="absolute h-100vh">
         <div class="relative h-100">
           <div class="show-button-container">
-            <div class="show-button" tabindex="1" @click="onShowButtonClick">
+            <div
+              class="show-button"
+              id="show-button"
+              tabindex="1"
+              @click="onShowButtonClick"
+            >
               <div
                 @animationend="onArrowAnimationEnd"
                 class="arrow"
