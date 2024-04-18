@@ -1,7 +1,9 @@
 <template>
   <div class="toolbar-header">
     <div class="toolbar-header__items-container">
-      <h3 class="toolbar-header__item" v-for="item of items">{{ item }}</h3>
+      <h3 class="toolbar-header__item" v-for="(item, index) of items" :key="index">
+        {{ item }}
+      </h3>
     </div>
 
     <div class="toolbar-header__menu" @mouseleave="onMouseLeave" @mouseover="onMouseOver">
@@ -22,9 +24,15 @@
   </div>
 </template>
 
+<script lang="ts">
+export default defineComponent({
+  name: 'SideToolbarHeader',
+})
+</script>
+
 <script setup lang="ts">
-import { PropType, ref } from 'vue'
-import { IToolbarHeaderItem } from '../model'
+import { PropType, ref, defineComponent } from 'vue'
+import { IToolbarHeaderItem } from '../../model'
 import menu from '../assets/menu.svg'
 
 // :class="{

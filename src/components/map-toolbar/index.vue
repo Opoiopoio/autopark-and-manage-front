@@ -1,14 +1,20 @@
 <template>
   <div class="toolbar">
-    <MapToolbarItem name="Объекты" :items="objects" />
-    <MapToolbarItem name="Техника" :items="techich" />
+    <MapToolbarTree name="Объекты" :items="objects" />
+    <MapToolbarTree name="Техника" :items="techich" />
     <input type="text" placeholder="Адрес" />
   </div>
 </template>
 
+<script lang="ts">
+export default defineComponent({
+  name: 'MapToolbar',
+})
+</script>
+
 <script setup lang="ts">
-import { reactive } from 'vue'
-import MapToolbarItem from './MapToolbarTree.vue'
+import { reactive, defineComponent } from 'vue'
+import MapToolbarTree from './Tree.vue'
 
 const objects = reactive(['gz-gon'])
 const techich = reactive(['maz', 'kamaz', 'qewr', 'qwer', 'qwer'])

@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import MoscowMap from './components/MainMap.vue'
-import MapToolbar from './components/MapToolbar.vue'
-import SideToolbar from './components/SideToolbar.vue'
+import MainMap from './components/MainMap.vue'
+import { MapToolbar } from './components/map-toolbar'
+import { SideToolbar } from './components/side-toolbar'
 </script>
 
 <template>
   <div>
-    <MoscowMap />
+    <MainMap />
     <MapToolbar />
     <SideToolbar />
   </div>

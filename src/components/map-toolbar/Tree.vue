@@ -20,9 +20,15 @@
   </div>
 </template>
 
+<script lang="ts">
+export default defineComponent({
+  name: 'MapToolbarTree',
+})
+</script>
+
 <script setup lang="ts">
-import { onMounted, PropType, ref } from 'vue'
-import CollabseArrow from './CollabseArrow.vue'
+import { onMounted, PropType, ref, defineComponent } from 'vue'
+import CollabseArrow from '../CollabseArrow.vue'
 defineProps({
   name: { type: String, required: true },
   items: { type: Array as PropType<Array<string>>, required: true },

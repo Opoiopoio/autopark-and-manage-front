@@ -5,7 +5,7 @@
       <h4>{{ name }}</h4>
     </div>
     <h4 class="card-object__manager">Руководитель: {{ manager }}</h4>
-    <ObjectTechnical :items="technical" />
+    <CardObjectTechnical :items="technical" />
     <div class="card-object__complete-status">
       <p
         class="card-object__complete-status__note"
@@ -24,12 +24,18 @@
   </div>
 </template>
 
+<script lang="ts">
+export default defineComponent({
+  name: 'CardObject',
+})
+</script>
+
 <script setup lang="ts">
-import { computed, PropType } from 'vue'
+import { computed, PropType, defineComponent } from 'vue'
 import { ITectical } from '../../model'
 import { useStore } from 'vuex'
 import { processTaskColors } from '../../utils'
-import ObjectTechnical from './CardObjectTechnical.vue'
+import CardObjectTechnical from './Technical.vue'
 
 const store = useStore()
 
@@ -52,6 +58,7 @@ function onImageClick() {
 
 const completeStatusFontColor = computed(() => {
   if (props.complete_status >= 53) return 'white'
+  return undefined
 })
 
 const completeStatusNoteStyle = computed(() => {

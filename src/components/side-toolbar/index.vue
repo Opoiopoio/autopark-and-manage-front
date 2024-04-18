@@ -21,7 +21,7 @@
       >
         <SideToolbarHeader :menu-items="headerMenuItems" :items="headerItems" />
         <div class="content-box__body">
-          <CardsContainer :items="objects" template="item">
+          <SideToolbarCardsContainer :items="objects" template="item">
             <template #[resourceTemplates.object]="{ item }">
               <CardObject
                 :complete_status="item.complete_status"
@@ -33,7 +33,7 @@
                 :name="item.name"
               />
             </template>
-          </CardsContainer>
+          </SideToolbarCardsContainer>
         </div>
       </div>
 
@@ -65,14 +65,20 @@
   </div>
 </template>
 
+<script lang="ts">
+export default defineComponent({
+  name: 'SideToolbar',
+})
+</script>
+
 <script setup lang="ts">
-import { computed, reactive, Ref, ref, watch } from 'vue'
+import { computed, defineComponent, reactive, Ref, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 
-import CallabseArrow from './CollabseArrow.vue'
-import SideToolbarHeader from './SideToolbarHeader.vue'
-import CardsContainer from './CardsContainer.vue'
-import CardObject from './card-object/CardObject.vue'
+import CallabseArrow from '../CollabseArrow.vue'
+import SideToolbarHeader from './Header.vue'
+import SideToolbarCardsContainer from './CardsContainer.vue'
+import { CardObject } from '../card-object'
 
 import {
   IObject,
@@ -82,7 +88,7 @@ import {
   ResourceTemplates,
   TemplateNames,
   ToolbarHeaderItem,
-} from '../model'
+} from '../../model'
 
 const resourceStatuses = reactive<Record<Resources, boolean>>(new ResourceStatuses())
 

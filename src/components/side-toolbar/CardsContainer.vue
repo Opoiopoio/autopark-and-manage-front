@@ -6,9 +6,15 @@
   </div>
 </template>
 
+<script lang="ts">
+export default defineComponent({
+  name: 'SideToolbarCardsContainer',
+})
+</script>
+
 <script setup lang="ts">
-import { PropType } from 'vue'
-import { IObject, ITectical } from '../model'
+import { PropType, defineComponent } from 'vue'
+import { IObject, ITectical } from '../../model'
 
 defineProps({
   items: Array as PropType<Partial<IObject & ITectical>[]>,

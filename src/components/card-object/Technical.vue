@@ -31,8 +31,14 @@
   </div>
 </template>
 
+<script lang="ts">
+export default defineComponent({
+  name: 'CardObjectTecnical',
+})
+</script>
+
 <script setup lang="ts">
-import { computed, PropType, ref } from 'vue'
+import { computed, PropType, ref, defineComponent } from 'vue'
 import { useStore } from 'vuex'
 import { ITectical } from '../../model'
 
