@@ -14,10 +14,10 @@ export default defineComponent({
 
 <script setup lang="ts">
 import { PropType, defineComponent } from 'vue'
-import { IObject, ITectical } from '../../model'
+import { IEmployee, IIcon, IObject, ITectical } from '../../model'
 
 defineProps({
-  items: Array as PropType<Partial<IObject & ITectical>[]>,
+  items: Array as PropType<Partial<IObject & ITectical & IEmployee & IIcon & object>[]>,
 })
 </script>
 

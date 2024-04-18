@@ -13,11 +13,5 @@ import { SideToolbar } from './components/side-toolbar'
 </template>
 
 <style lang="scss">
-:root {
-  --main-color: #396ca3;
-  --main-monochrome: lighten(var(--main-color), 5%);
-  --main-darken: #2061b5;
-  --sub-color: #a3396c;
-  --accent-color: #6ca339;
-}
+@import url('./variables.scss');
 </style>

@@ -15,9 +15,12 @@ const store = useStore()
 const mapRef = ref<HTMLDivElement>()
 
 onMounted(() => {
-  if (!mapRef.value) return
-  store.commit('setMap', mapRef.value)
-
+  try {
+    if (!mapRef.value) return
+    store.commit('setMap', mapRef.value)
+  } catch (error) {
+    console.error(error)
+  }
   // const image = new MarkerIcon() as string
 
   // const iconMarker = leaflet.icon({

@@ -51,7 +51,6 @@ const props = defineProps({
 
 function onImageClick() {
   if (!props.location) return
-  console.log(props.location)
 
   store.dispatch('flyTo', props.location)
 }
@@ -72,7 +71,6 @@ const completeStatusNoteStyle = computed(() => {
 <style>
 .card-object {
   --brd-radius: 7px;
-  /* border: solid 1px #fff; */
   border-radius: var(--brd-radius);
 
   width: calc(100% - 40px);
@@ -80,9 +78,6 @@ const completeStatusNoteStyle = computed(() => {
 
   background-color: rgba(255, 255, 255, 0.4);
 
-  /* backdrop-filter: blur(20px); */
-
-  /* color: var(--ft-light-color); */
   box-shadow: 0px 2px 10px gray;
 
   padding: 20px;
@@ -102,7 +97,7 @@ const completeStatusNoteStyle = computed(() => {
   /* margin: var(--items-margin); */
   border-radius: var(--brd-radius);
   width: 100%;
-  height: 100%;
+  height: auto;
 }
 
 .card-object__image-container > h4 {

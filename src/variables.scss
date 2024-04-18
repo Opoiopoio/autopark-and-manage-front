@@ -1,0 +1,26 @@
+$scale: 10%;
+$main-color: #396ca3;
+$main-color-lighten: lighten($main-color, $scale);
+$main-color-darken: darken($main-color, $scale);
+
+$sub-color: #a3396c;
+$sub-color-lighten: lighten($sub-color, $scale);
+$sub-color-darken: darken($sub-color, $scale);
+
+$accent-color: #6ca339;
+$accent-color-lighten: lighten($accent-color, $scale);
+$accent-color-darken: darken($accent-color, $scale);
+
+:root {
+  --main-color: #{$main-color};
+  --main-color-lighten: #{$main-color-lighten};
+  --main-color-darken: #{$main-color-darken};
+
+  --sub-color: #{$sub-color};
+  --sub-color-lighten: #{$sub-color-lighten};
+  --sub-color-darken: #{$sub-color-darken};
+
+  --accent-color: #{$accent-color};
+  --accent-color-lighten: #{$accent-color-lighten};
+  --accent-color-darken: #{$accent-color-darken};
+}

@@ -2,8 +2,10 @@ import axios from 'axios'
 import { ActionContext, Module } from 'vuex'
 import config from '../../config'
 import { ITectical, TechnicalState, WithNumber } from '../../model'
-import { MarkerIcon, MarkerToTecnical } from '../../utils'
+import { MarkerToTecnical } from '../../utils'
 import { Marker } from 'leaflet'
+import belaz from '../../assets/belaz.jpg'
+import kran from '../../assets/kran.jpeg'
 
 export const technical: Module<TechnicalState, TechnicalState> = {
   namespaced: true,
@@ -39,7 +41,7 @@ export const technical: Module<TechnicalState, TechnicalState> = {
           {
             id: 1,
             driver: 'Остапчук Семен Тимофеевич',
-            icon: new MarkerIcon() as string,
+            icon: belaz,
             mark: 'Джон Бот 008',
             location: [55.751574, 37.573856],
             number: 'X123QW36',
@@ -47,7 +49,7 @@ export const technical: Module<TechnicalState, TechnicalState> = {
           {
             id: 2,
             driver: 'Остапчук Семен Тимофеевич',
-            icon: new MarkerIcon() as string,
+            icon: kran,
             mark: 'Джон Бот 007',
             location: [55.751574, 37.573856],
             number: 'X123QW37',

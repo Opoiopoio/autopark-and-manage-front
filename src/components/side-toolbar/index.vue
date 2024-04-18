@@ -21,7 +21,7 @@
       >
         <SideToolbarHeader :menu-items="headerMenuItems" :items="headerItems" />
         <div class="content-box__body">
-          <SideToolbarCardsContainer :items="objects" template="item">
+          <SideToolbarCardsContainer :items="activeResource" template="item">
             <template #[resourceTemplates.object]="{ item }">
               <CardObject
                 :complete_status="item.complete_status"
@@ -32,6 +32,18 @@
                 :technical="item.technical"
                 :name="item.name"
               />
+            </template>
+            <template #[resourceTemplates.tecnical]="{ item }">
+              <CardTechnic
+                :driver="item.driver"
+                :icon="item.icon"
+                :location="item.location"
+                :mark="item.mark"
+                :number="item.number"
+              />
+            </template>
+            <template #[resourceTemplates.icon]="{ item }">
+              <CardIcon :name="item.name" :url="item.url" />
             </template>
           </SideToolbarCardsContainer>
         </div>
@@ -79,9 +91,10 @@ import CallabseArrow from '../CollabseArrow.vue'
 import SideToolbarHeader from './Header.vue'
 import SideToolbarCardsContainer from './CardsContainer.vue'
 import { CardObject } from '../card-object'
-
+import CardTechnic from '../CardTechnic.vue'
+import CardIcon from '../CardIcon.vue'
 import {
-  IObject,
+  ComputedResourceItems,
   IToolbarHeaderItem,
   Resources,
   ResourceStatuses,
@@ -90,7 +103,16 @@ import {
   ToolbarHeaderItem,
 } from '../../model'
 
+const store = useStore()
+
 const resourceStatuses = reactive<Record<Resources, boolean>>(new ResourceStatuses())
+
+const resourceTemplates = computed<Record<Resources, TemplateNames>>(() => {
+  const result = new ResourceTemplates(resourceStatuses)
+  return result
+})
+
+let oldValue: Resources | undefined
 
 const activeField = computed<Resources>((getter) => {
   const trueValues = Object.values(resourceStatuses).filter((value) => value == true)
@@ -103,13 +125,9 @@ const activeField = computed<Resources>((getter) => {
   else return keys.find((key) => key != getter && resourceStatuses[key]) as Resources
 })
 
-const resourceTemplates = computed<Record<Resources, TemplateNames>>(() => {
-  const result = new ResourceTemplates(resourceStatuses)
-  console.log(result)
-  return result
-})
+const resourceItems = new ComputedResourceItems(store)
 
-let oldValue: Resources | undefined
+const activeResource = computed(() => resourceItems[activeField.value].value)
 
 watch(
   () => activeField,
@@ -121,8 +139,7 @@ watch(
   { deep: true }
 )
 
-const store = useStore()
-const headerItems = ['Огранизация', 'qewr']
+const headerItems = ['Огранизация']
 
 const headerMenuItems: Ref<IToolbarHeaderItem[]> = ref([
   new ToolbarHeaderItem('Объекты', resourceStatuses, 'object'),
@@ -131,19 +148,6 @@ const headerMenuItems: Ref<IToolbarHeaderItem[]> = ref([
   new ToolbarHeaderItem('Техника', resourceStatuses, 'tecnical'),
   new ToolbarHeaderItem('Оборудование', resourceStatuses, 'equipment'),
 ])
-
-store.dispatch('technical/get')
-store.dispatch('object/get')
-
-// const technical = computed(() => {
-//   const technic = store.getters['technical/technical']
-//   return Object.values<ITectical>(technic)
-// })
-
-const objects = computed(() => {
-  const technic = store.getters['object/objects']
-  return Object.values<IObject>(technic)
-})
 
 const isOpened = ref(false)
 const isClosing = ref(false)
@@ -326,7 +330,7 @@ function onArrowAnimationEnd(e: AnimationEvent) {
 }
 
 .show-button:hover {
-  background-color: var(--main-monochrome);
+  background-color: var(--main-color-lighten);
 }
 
 .arrow {

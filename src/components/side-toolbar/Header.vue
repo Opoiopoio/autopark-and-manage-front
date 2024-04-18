@@ -33,7 +33,7 @@ export default defineComponent({
 <script setup lang="ts">
 import { PropType, ref, defineComponent } from 'vue'
 import { IToolbarHeaderItem } from '../../model'
-import menu from '../assets/menu.svg'
+import menu from '../../assets/menu.svg'
 
 // :class="{
 //           'toolbar-header__menu__items_opened': menuIsOpened,
@@ -160,10 +160,10 @@ function onMouseLeave() {
 }
 
 .toolbar-header__menu__item:hover {
-  background-color: var(--main-monochrome);
+  background-color: var(--main-color-lighten);
 }
 
 .toolbar-header__menu__item:active {
-  background-color: var(--main-darken);
+  background-color: var(--main-color-darken);
 }
 </style>

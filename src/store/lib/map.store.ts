@@ -1,6 +1,9 @@
 import { Module } from 'vuex'
-import leaflet, { Marker, Map } from 'leaflet'
+import leaflet, { Marker } from 'leaflet'
 import { MapState } from '../../model'
+import { MarkerQueue } from '../../utils'
+
+const markerQueue = new MarkerQueue()
 
 export const mapModule: Module<MapState, MapState> = {
   state: {
@@ -25,6 +28,8 @@ export const mapModule: Module<MapState, MapState> = {
               '',
           })
           .addTo(state.map)
+
+        markerQueue.process(state.map)
       }
     },
   },
@@ -45,17 +50,8 @@ export const mapModule: Module<MapState, MapState> = {
       console.log(map)
 
       if (!map) {
-        this.watch(
-          (state) => state.map,
-          (value) => {
-            console.log('watch', value)
-            marker.addTo(value as Map)
-          },
-          { once: true }
-        )
-        return
-      }
-      marker.addTo(map)
+        markerQueue.add(marker)
+      } else marker.addTo(map)
     },
 
     removeMarker(context, marker: Marker) {

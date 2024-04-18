@@ -13,12 +13,12 @@ body {
 }
 
 :root {
-  --bg-color: #242424;
-  /* --main-color: #396ca3;
-  --main-monochrome: #598dc5; */
-  --main-darken: #2061b5;
+  /* --bg-color: #242424;
+  --main-color: #396ca3;
+  --main-color-lighten: #598dc5;
+  --main-color-darken: #2061b5;
   --sub-color: #a3396c;
-  --accent-color: #6ca339;
+  --accent-color: #6ca339; */
   --card-bg-color: rgb();
   --ft-light-color: rgba(255, 255, 255, 0.87);
   --ft-dark-color: rgb(92, 92, 92);
