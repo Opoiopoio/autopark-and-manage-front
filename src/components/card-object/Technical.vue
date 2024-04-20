@@ -142,7 +142,6 @@ function onHeaderClick() {
 
   --an-duration: 0.3s;
   --an-fill-mode: forwards;
-  padding: 5px 10px;
 }
 
 .technical__items_showind-up {
@@ -166,6 +165,15 @@ function onHeaderClick() {
 
 .technical__item {
   cursor: pointer;
+  padding: 5px 10px;
+}
+
+.technical__item:hover {
+  background-color: var(--main-color-lighten);
+}
+
+.technical__item:active {
+  background-color: var(--main-color-darken);
 }
 
 .technical__item__mark,

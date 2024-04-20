@@ -35,6 +35,13 @@ defineProps({
   padding: 20px;
 }
 
+.cards-container__item > div {
+  border-radius: var(--brd-radius);
+  background-color: rgba(255, 255, 255, 0.4);
+
+  box-shadow: 0px 2px 10px gray;
+}
+
 .cards-container::-webkit-scrollbar {
   width: 0;
 }

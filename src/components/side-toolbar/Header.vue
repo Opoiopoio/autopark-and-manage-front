@@ -7,7 +7,23 @@
     </div>
 
     <div class="toolbar-header__menu" @mouseleave="onMouseLeave" @mouseover="onMouseOver">
-      <img tabindex="2" :src="menu" alt="menu" @click="onMenuClick" />
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="32"
+        height="32"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        @click="onMenuClick"
+      >
+        <line x1="3" y1="12" x2="21" y2="12" />
+        <line x1="3" y1="6" x2="21" y2="6" />
+        <line x1="3" y1="18" x2="21" y2="18" />
+      </svg>
+
       <Transition name="fade">
         <div v-if="menuIsOpened" class="toolbar-header__menu__items">
           <div
@@ -32,8 +48,7 @@ export default defineComponent({
 
 <script setup lang="ts">
 import { PropType, ref, defineComponent } from 'vue'
-import { IToolbarHeaderItem } from '../../model'
-import menu from '../../assets/menu.svg'
+import { IToolbarHeaderItem } from '@/model'
 
 // :class="{
 //           'toolbar-header__menu__items_opened': menuIsOpened,
@@ -107,10 +122,10 @@ function onMouseLeave() {
   position: relative;
 }
 
-.toolbar-header__menu > img {
+.toolbar-header__menu > svg {
   height: 100%;
   cursor: pointer;
-  color: var(--main-color);
+  color: var(--main-color-darken);
 }
 
 .toolbar-header__menu__items {

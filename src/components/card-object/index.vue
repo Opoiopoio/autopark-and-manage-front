@@ -63,14 +63,9 @@ const completeStatusNoteStyle = computed(() => {
 <style>
 .card-object {
   --brd-radius: 7px;
-  border-radius: var(--brd-radius);
 
   width: calc(100% - 40px);
   height: calc(100% - 40px);
-
-  background-color: rgba(255, 255, 255, 0.4);
-
-  box-shadow: 0px 2px 10px gray;
 
   padding: 20px;
   --items-margin: 0 20px;
