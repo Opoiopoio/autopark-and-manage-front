@@ -18,9 +18,10 @@
     "axios": "^1.6.8",
     "leaflet": "^1.9.4",
     "leaflet-tilelayer-mbtiles": "^1.4.1",
+    "pinia": "^2.1.7",
     "sass": "^1.75.0",
-    "vue": "^3.4.21",
-    "vuex": "^4.1.0"
+    "vite-tsconfig-paths": "^4.3.2",
+    "vue": "^3.4.21"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",

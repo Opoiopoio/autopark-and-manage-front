@@ -39,14 +39,14 @@ export default defineComponent({
 
 <script setup lang="ts">
 import { computed, PropType, ref, defineComponent } from 'vue'
-import { useStore } from 'vuex'
 import { ITectical } from '../../model'
+import { useMapStore } from '@/store'
 
 const props = defineProps({
   items: Array as PropType<ITectical[]>,
 })
 
-const store = useStore()
+const store = useMapStore()
 
 const isShowed = computed(() => {
   return props.items?.length != 0
@@ -75,7 +75,7 @@ function onShowAnimationEnd() {
 
 function onTechnicalItemClick(item: ITectical) {
   onHeaderClick()
-  store.dispatch('flyTo', item.location)
+  store.flyTo(item.location)
 }
 
 function onHeaderClick() {

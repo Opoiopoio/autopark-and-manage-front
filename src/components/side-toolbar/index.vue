@@ -85,7 +85,6 @@ export default defineComponent({
 
 <script setup lang="ts">
 import { computed, defineComponent, reactive, Ref, ref, watch } from 'vue'
-import { useStore } from 'vuex'
 
 import CallabseArrow from '../CollabseArrow.vue'
 import SideToolbarHeader from './Header.vue'
@@ -101,9 +100,9 @@ import {
   ResourceTemplates,
   TemplateNames,
   ToolbarHeaderItem,
-} from '../../model'
+} from '@/model'
 
-const store = useStore()
+// const store = useStore()
 
 const resourceStatuses = reactive<Record<Resources, boolean>>(new ResourceStatuses())
 
@@ -125,7 +124,7 @@ const activeField = computed<Resources>((getter) => {
   else return keys.find((key) => key != getter && resourceStatuses[key]) as Resources
 })
 
-const resourceItems = new ComputedResourceItems(store)
+const resourceItems = new ComputedResourceItems()
 
 const activeResource = computed(() => resourceItems[activeField.value].value)
 

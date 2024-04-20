@@ -1,6 +1,6 @@
 import { computed, ComputedRef } from 'vue'
-import { Store } from 'vuex'
 import { ITectical, IObject, IEmployee, IIcon } from './server.types'
+import { useIconStore, useObjectStore, useTchicalStore } from '../../store'
 
 export interface IToolbarHeaderItem {
   tittle: string
@@ -66,50 +66,34 @@ export class ResourceTemplates implements Record<Resources, TemplateNames> {
   }
 }
 
-export class ComputedResourceItems implements Record<Resources, ComputedRef> {
+export class ComputedResourceItems implements Record<Resources, object> {
   readonly object: ComputedRef<IObject[]>
   readonly tecnical: ComputedRef<ITectical[]>
   readonly icon: ComputedRef<IIcon[]>
   readonly employee: ComputedRef<IEmployee[]>
   readonly equipment: ComputedRef<IEmployee[]>
-  constructor(store: Store<object>) {
-    this.dispatchGet(store)
-    this.tecnical = computed(() => {
-      const technic = store.getters['technical/technical']
-      return Object.values<ITectical>(technic)
-    })
+  constructor() {
+    const tecnicalStore = useTchicalStore()
+    tecnicalStore.get()
 
-    this.object = computed(() => {
-      const objects = store.getters['object/objects']
-      return Object.values<IObject>(objects)
-    })
+    this.tecnical = computed(() => Object.values(tecnicalStore.items))
+
+    const objectStore = useObjectStore()
+    objectStore.get()
+
+    this.object = computed(() => Object.values(objectStore.items))
 
     this.employee = computed(() => {
-      const employee = store.getters['employee/employee']
-      return Object.values<IEmployee>(employee ?? [])
+      return Object.values<IEmployee>([])
     })
 
     this.equipment = computed(() => {
-      const equipment = store.getters['equipment/equipment']
-      return Object.values<IEmployee>(equipment ?? [])
+      return Object.values<IEmployee>([])
     })
 
-    this.icon = computed(() => {
-      const icons = store.getters['icon/icons']
-      return Object.values<IIcon>(icons)
-    })
-  }
-
-  private dispatchGet(store: Store<object>) {
-    store.dispatch('technical/get')
-    store.dispatch('object/get')
-    store.dispatch('icon/get')
-    try {
-      store.dispatch('employee/get')
-      store.dispatch('equipment/get')
-    } catch (error) {
-      console.error(error)
-    }
+    const iconStore = useIconStore()
+    iconStore.get()
+    this.icon = computed(() => Object.values(iconStore.items))
   }
 }
 

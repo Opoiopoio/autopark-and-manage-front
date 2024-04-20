@@ -1,27 +1,11 @@
-import { Module } from 'vuex'
-import { AuthState } from '../../model'
+import { defineStore } from 'pinia'
+import { ref } from 'vue'
 
-export const auth: Module<AuthState, AuthState> = {
-  namespaced: true,
-  state: {
-    name: null,
-    markerColor: null,
-    accessToken: null,
-    refreshToken: null,
-  },
-  getters: {
-    name(state) {
-      return state.name
-    },
-    markerColor(state) {
-      return state.markerColor
-    },
-    accessToken(state) {
-      return state.accessToken
-    },
-    refreshToken(state) {
-      return state.refreshToken
-    },
-  },
-  mutations: {},
-}
+export const useAuthStore = defineStore('auth', () => {
+  const name = ref<string>()
+  const markerColor = ref<string>()
+  const accessToken = ref<string>()
+  const refreshToken = ref<string>()
+
+  return { name, markerColor, accessToken, refreshToken }
+})

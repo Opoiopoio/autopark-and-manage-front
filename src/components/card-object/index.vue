@@ -33,11 +33,11 @@ export default defineComponent({
 <script setup lang="ts">
 import { computed, PropType, defineComponent } from 'vue'
 import { ITectical } from '../../model'
-import { useStore } from 'vuex'
 import { processTaskColors } from '../../utils'
 import CardObjectTechnical from './Technical.vue'
+import { useMapStore } from '@/store'
 
-const store = useStore()
+const store = useMapStore()
 
 const props = defineProps({
   name: String,
@@ -52,7 +52,7 @@ const props = defineProps({
 function onImageClick() {
   if (!props.location) return
 
-  store.dispatch('flyTo', props.location)
+  store.flyTo(props.location)
 }
 
 const completeStatusFontColor = computed(() => {

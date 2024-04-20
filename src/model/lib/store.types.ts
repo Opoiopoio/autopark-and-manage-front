@@ -1,4 +1,5 @@
 import { Map, Marker } from 'leaflet'
+import { Ref } from 'vue'
 import { IIcon, IObject, ITectical } from './server.types'
 
 export interface IconState {
@@ -6,12 +7,12 @@ export interface IconState {
   // leafletIcons: Record<string, Icon>
 }
 export interface MapState {
-  map: null | Map
+  map: Ref<Map | undefined>
 }
 
 export interface ObjectState {
   objects: Record<string, IObject>
-  objectMarkers: Record<string, Marker>
+  markers: Record<string, Marker>
 }
 
 export interface TechnicalState {

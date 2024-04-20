@@ -15,8 +15,8 @@ export default defineComponent({
 </script>
 
 <script setup lang="ts">
+import { useMapStore } from '@/store'
 import { computed, defineComponent, PropType } from 'vue'
-import { useStore } from 'vuex'
 
 const props = defineProps({
   driver: String,
@@ -26,7 +26,7 @@ const props = defineProps({
   number: String,
 })
 
-const store = useStore()
+const store = useMapStore()
 
 const techic = computed(() => `${props.mark ?? ''} ${props.number ?? ''}`)
 
@@ -35,7 +35,7 @@ const driverName = computed(() => props.driver ?? 'Не указан')
 function onImageClick() {
   if (!props.location) return
 
-  store.dispatch('flyTo', props.location)
+  store.flyTo(props.location)
 }
 </script>
 

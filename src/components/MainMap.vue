@@ -4,20 +4,19 @@
 
 <script setup lang="ts">
 // import leaflet from 'leaflet'
+import { useMapStore } from '@/store'
 import 'leaflet/dist/leaflet.css'
 
 import { onMounted, ref } from 'vue'
-import { useStore } from 'vuex'
-// import { MarkerIcon } from '../utils'
 
-const store = useStore()
+const store = useMapStore()
 
 const mapRef = ref<HTMLDivElement>()
 
 onMounted(() => {
   try {
     if (!mapRef.value) return
-    store.commit('setMap', mapRef.value)
+    store.setMap(mapRef.value)
   } catch (error) {
     console.error(error)
   }
