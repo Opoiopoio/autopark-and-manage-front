@@ -1,7 +1,7 @@
 <template>
   <div class="card-object">
     <div class="card-object__image-container" @click="onImageClick">
-      <img :src="image" :alt="name" />
+      <img :src="icon" :alt="name" />
       <h4>{{ name }}</h4>
     </div>
     <h4 class="card-object__manager">Руководитель: {{ manager }}</h4>
@@ -31,23 +31,15 @@ export default defineComponent({
 </script>
 
 <script setup lang="ts">
-import { computed, PropType, defineComponent } from 'vue'
-import { ITectical } from '../../model'
+import { computed, defineComponent } from 'vue'
+import { IObject } from '../../model'
 import { processTaskColors } from '../../utils'
 import CardObjectTechnical from './Technical.vue'
 import { useMapStore } from '@/store'
 
 const store = useMapStore()
 
-const props = defineProps({
-  name: String,
-  image: String,
-  manager: String,
-  technical: Array as PropType<ITectical[]>,
-  location: Object as PropType<[number, number]>,
-  complete_status: { type: Number, default: () => 0 },
-  edited_date: Date,
-})
+const props = withDefaults(defineProps<IObject>(), { complete_status: () => 0 })
 
 function onImageClick() {
   if (!props.location) return

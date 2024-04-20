@@ -15,6 +15,7 @@ import icon6 from '@/assets/item_417.jpg'
 import { MarkerToObject } from '@/utils'
 import { useTchicalStore } from './technical.store'
 import { useMapStore } from './map.store'
+import { useAuthStore } from './auth.store'
 
 export const useObjectStore = defineStore('object', () => {
   const items = reactive<ObjectState['objects']>({})
@@ -22,6 +23,7 @@ export const useObjectStore = defineStore('object', () => {
 
   const technicalStore = useTchicalStore()
   const mapStore = useMapStore()
+  const authStore = useAuthStore()
 
   async function get(name?: string) {
     let data: IObject[] = []
@@ -154,7 +156,7 @@ export const useObjectStore = defineStore('object', () => {
   }
 
   function onAddOrChangeObject(object: IObject) {
-    const marker = new MarkerToObject(object)
+    const marker = new MarkerToObject(object, authStore)
 
     markers[object.name] = marker
     items[object.name] = object

@@ -26,7 +26,7 @@
               <CardObject
                 :complete_status="item.complete_status"
                 :edited_date="item.edited_date"
-                :image="item.icon"
+                :icon="item.icon"
                 :location="item.location"
                 :manager="item.manager"
                 :technical="item.technical"
