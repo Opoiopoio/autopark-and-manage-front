@@ -9,7 +9,7 @@
     <div class="toolbar-tree__title">
       <h5>{{ name }}</h5>
       <div class="toolbar-tree__collabse-arrow" ref="collabseArrowRef">
-        <CollabseArrow height="20px" transform="rotate(-90)" />
+        <CollabseArrow height="20px" transform="rotate(90)" />
       </div>
     </div>
     <div ref="toolbarTreeItemsRef" class="toolbar-tree__items">
@@ -86,7 +86,9 @@ onMounted(() => {})
   max-height: 200px;
   z-index: 400;
 
-  border-radius: 0 0 0.5rem 0.5rem;
+  border-radius: 0.5rem;
+
+  scrollbar-width: none;
 
   -ms-overflow-style: none;
   overflow: -moz-scrollbars-none;
@@ -99,6 +101,20 @@ onMounted(() => {})
 .toolbar-tree__item {
   padding: 10px;
   cursor: pointer;
+
+  -webkit-transition: var(--transition-to-btns);
+  -moz-transition: var(--transition-to-btns);
+  -ms-transition: var(--transition-to-btns);
+  -o-transition: var(--transition-to-btns);
+  transition: var(--transition-to-btns);
+}
+
+.toolbar-tree__item:hover {
+  background-color: var(--main-color-lighten);
+}
+
+.toolbar-tree__item:active {
+  background-color: var(--main-color-darken);
 }
 
 .toolbar-tree__items.opened {
@@ -123,13 +139,13 @@ onMounted(() => {})
 
 @keyframes rotate {
   to {
-    transform: rotate(90deg);
+    transform: rotate(-90deg);
   }
 }
 
 @keyframes rotate-reverse {
   to {
-    transform: rotate(-90deg);
+    transform: rotate(90deg);
   }
 }
 </style>

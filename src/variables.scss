@@ -23,4 +23,6 @@ $accent-color-darken: darken($accent-color, $scale);
   --accent-color: #{$accent-color};
   --accent-color-lighten: #{$accent-color-lighten};
   --accent-color-darken: #{$accent-color-darken};
+
+  --transition-to-btns: all 100ms ease;
 }

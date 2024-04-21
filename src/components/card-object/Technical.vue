@@ -166,6 +166,12 @@ function onHeaderClick() {
 .technical__item {
   cursor: pointer;
   padding: 5px 10px;
+
+  -webkit-transition: var(--transition-to-btns);
+  -moz-transition: var(--transition-to-btns);
+  -ms-transition: var(--transition-to-btns);
+  -o-transition: var(--transition-to-btns);
+  transition: var(--transition-to-btns);
 }
 
 .technical__item:hover {

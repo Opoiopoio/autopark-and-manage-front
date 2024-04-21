@@ -32,8 +32,8 @@ export default defineComponent({
 
 <script setup lang="ts">
 import { computed, defineComponent } from 'vue'
-import { IObject } from '../../model'
-import { processTaskColors } from '../../utils'
+import { IObject } from '@/model'
+import { processTaskColors } from '@/utils'
 import CardObjectTechnical from './Technical.vue'
 import { useMapStore } from '@/store'
 

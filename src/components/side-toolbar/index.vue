@@ -325,11 +325,22 @@ function onArrowAnimationEnd(e: AnimationEvent) {
   border: solid #fff 0.5px;
   border-radius: 100px;
 
+  -webkit-transition: var(--transition-to-btns);
+  -moz-transition: var(--transition-to-btns);
+  -ms-transition: var(--transition-to-btns);
+  -o-transition: var(--transition-to-btns);
+  transition: var(--transition-to-btns);
+
   /* z-index: 300; */
 }
 
 .show-button:hover {
   background-color: var(--main-color-lighten);
+  cursor: pointer;
+}
+
+.show-button:active {
+  background-color: var(--main-color-darken);
 }
 
 .arrow {

@@ -172,6 +172,12 @@ function onMouseLeave() {
   cursor: pointer;
   width: 100%;
   color: #fff;
+
+  -webkit-transition: var(--transition-to-btns);
+  -moz-transition: var(--transition-to-btns);
+  -ms-transition: var(--transition-to-btns);
+  -o-transition: var(--transition-to-btns);
+  transition: var(--transition-to-btns);
 }
 
 .toolbar-header__menu__item:hover {
