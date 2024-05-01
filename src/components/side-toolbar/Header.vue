@@ -6,36 +6,60 @@
       </h3>
     </div>
 
-    <div class="toolbar-header__menu" @mouseleave="onMouseLeave" @mouseover="onMouseOver">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="32"
-        height="32"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        @click="onMenuClick"
-      >
-        <line x1="3" y1="12" x2="21" y2="12" />
-        <line x1="3" y1="6" x2="21" y2="6" />
-        <line x1="3" y1="18" x2="21" y2="18" />
-      </svg>
+    <div class="toolbar-header__buttons">
+      <div class="toolbar-header__add">
+        <svg
+          class="toolbar-header__button"
+          xmlns="http://www.w3.org/2000/svg"
+          width="32"
+          height="32"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <line x1="12" y1="4" x2="12" y2="20" />
+          <line x1="4" y1="12" x2="20" y2="12" />
+        </svg>
+      </div>
 
-      <Transition name="fade">
-        <div v-if="menuIsOpened" class="toolbar-header__menu__items">
-          <div
-            class="toolbar-header__menu__item"
-            v-for="(item, index) of menuItems"
-            :key="index"
-            @click="item.onClick(item.resourceStatuses, item.watchedResource)"
-          >
-            {{ item.tittle }}
+      <div
+        class="toolbar-header__menu"
+        @mouseleave="onMouseLeave"
+        @mouseover="onMouseOver"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="32"
+          height="32"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          @click="onMenuClick"
+        >
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+
+        <Transition name="fade">
+          <div v-if="menuIsOpened" class="toolbar-header__menu__items">
+            <div
+              class="toolbar-header__menu__item"
+              v-for="(item, index) of menuItems"
+              :key="index"
+              @click="item.onClick(item.resourceStatuses, item.watchedResource)"
+            >
+              {{ item.tittle }}
+            </div>
           </div>
-        </div>
-      </Transition>
+        </Transition>
+      </div>
     </div>
   </div>
 </template>
@@ -116,16 +140,27 @@ function onMouseLeave() {
   margin: 0;
 }
 
+.toolbar-header__buttons {
+  gap: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  color: var(--main-color-darken);
+}
+
+.toolbar-header__button {
+  height: 100%;
+  cursor: pointer;
+}
+
+.toolbar-header__add {
+  height: 32px;
+}
+
 .toolbar-header__menu {
   height: 32px;
   display: inline-block;
   position: relative;
-}
-
-.toolbar-header__menu > svg {
-  height: 100%;
-  cursor: pointer;
-  color: var(--main-color-darken);
 }
 
 .toolbar-header__menu__items {

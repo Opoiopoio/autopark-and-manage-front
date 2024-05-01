@@ -7,6 +7,7 @@
     >
       Техника: {{ techicalMarks ?? 'отсутствует' }}
     </h4>
+
     <div class="technical__items-container">
       <div
         class="technical__items"
@@ -91,6 +92,9 @@ function onHeaderClick() {
 <style>
 .technical {
   margin: var(--items-margin);
+  height: 21px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .technical__items-container {
@@ -101,22 +105,13 @@ function onHeaderClick() {
 }
 
 .technical__header {
-  display: flex;
-  justify-content: space-between;
-  cursor: pointer;
-  width: 100%;
+  max-width: 100%;
   margin: 0;
-  padding-top: 10px;
-
-  white-space: nowrap;
 
   overflow: hidden;
-}
+  text-overflow: ellipsis;
 
-.technical__header::after {
-  content: '';
-  background: url('/src/assets/arrow.svg');
-  height: 100%;
+  white-space: nowrap;
 }
 
 .technical__items {

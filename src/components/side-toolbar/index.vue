@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-v-model-argument -->
 <template>
   <div
     class="side-toolbar"
@@ -21,31 +22,14 @@
       >
         <SideToolbarHeader :menu-items="headerMenuItems" :items="headerItems" />
         <div class="content-box__body">
-          <SideToolbarCardsContainer :items="activeResource" template="item">
-            <template #[resourceTemplates.object]="{ item }">
-              <CardObject
-                :complete_status="item.complete_status"
-                :edited_date="item.edited_date"
-                :icon="item.icon"
-                :location="item.location"
-                :manager="item.manager"
-                :technical="item.technical"
-                :name="item.name"
-              />
-            </template>
-            <template #[resourceTemplates.tecnical]="{ item }">
-              <CardTechnic
-                :driver="item.driver"
-                :icon="item.icon"
-                :location="item.location"
-                :mark="item.mark"
-                :number="item.number"
-              />
-            </template>
-            <template #[resourceTemplates.icon]="{ item }">
-              <CardIcon :name="item.name" :url="item.url" />
-            </template>
-          </SideToolbarCardsContainer>
+          <SideToolbarBody
+            @update:resource="onUpdateResource"
+            :employee="resourceStatuses.employee"
+            :equipment="resourceStatuses.equipment"
+            :icon="resourceStatuses.icon"
+            :object="resourceStatuses.object"
+            :tecnical="resourceStatuses.tecnical"
+          />
         </div>
       </div>
 
@@ -84,59 +68,26 @@ export default defineComponent({
 </script>
 
 <script setup lang="ts">
-import { computed, defineComponent, reactive, Ref, ref, watch } from 'vue'
+import { defineComponent, reactive, Ref, ref } from 'vue'
 
 import CallabseArrow from '../CollabseArrow.vue'
 import SideToolbarHeader from './Header.vue'
-import SideToolbarCardsContainer from './CardsContainer.vue'
-import { CardObject } from '../card-object'
-import CardTechnic from '../CardTechnic.vue'
-import CardIcon from '../CardIcon.vue'
+import SideToolbarBody from './Body.vue'
 import {
-  ComputedResourceItems,
   IToolbarHeaderItem,
   Resources,
   ResourceStatuses,
-  ResourceTemplates,
-  TemplateNames,
   ToolbarHeaderItem,
+  UpdateResourceValue,
 } from '@/model'
 
 // const store = useStore()
 
 const resourceStatuses = reactive<Record<Resources, boolean>>(new ResourceStatuses())
 
-const resourceTemplates = computed<Record<Resources, TemplateNames>>(() => {
-  const result = new ResourceTemplates(resourceStatuses)
-  return result
-})
-
-let oldValue: Resources | undefined
-
-const activeField = computed<Resources>((getter) => {
-  const trueValues = Object.values(resourceStatuses).filter((value) => value == true)
-  const keys = Object.keys(resourceStatuses) as Resources[]
-
-  oldValue = getter
-
-  if (trueValues.length == 1)
-    return keys.find((key) => resourceStatuses[key]) as Resources
-  else return keys.find((key) => key != getter && resourceStatuses[key]) as Resources
-})
-
-const resourceItems = new ComputedResourceItems()
-
-const activeResource = computed(() => resourceItems[activeField.value].value)
-
-watch(
-  () => activeField,
-  () => {
-    if (Object.values(resourceStatuses).filter((value) => value == true).length == 1)
-      return
-    else if (oldValue) resourceStatuses[oldValue] = false
-  },
-  { deep: true }
-)
+function onUpdateResource(value: UpdateResourceValue) {
+  resourceStatuses[value.resource] = value.value
+}
 
 const headerItems = ['Огранизация']
 
@@ -280,8 +231,6 @@ function onArrowAnimationEnd(e: AnimationEvent) {
 .content-box__body {
   height: calc(100% - 55px);
   margin: 0;
-  display: flex;
-  flex-direction: column;
 }
 
 .absolute {

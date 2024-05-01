@@ -26,18 +26,27 @@ defineProps({
   display: grid;
   grid-template-columns: repeat(auto-fill, 300px);
   grid-gap: 15px;
+  align-items: stretch;
   overflow: auto;
 
   justify-content: center;
+
+  max-height: 100%;
 
   scrollbar-width: none;
 
   padding: 20px;
 }
 
+.cards-container__item {
+  box-sizing: border-box;
+}
+
 .cards-container__item > div {
   border-radius: var(--brd-radius);
   background-color: rgba(255, 255, 255, 0.4);
+
+  /* height: 100%; */
 
   box-shadow: 0px 2px 10px gray;
 }

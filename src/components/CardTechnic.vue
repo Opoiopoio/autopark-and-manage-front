@@ -44,7 +44,7 @@ function onImageClick() {
   --brd-radius: 7px;
 
   width: calc(100% - 40px);
-  height: calc(100% - 40px);
+  /* height: calc(100% - 40px); */
 
   padding: 20px;
   --items-margin: 0 20px;

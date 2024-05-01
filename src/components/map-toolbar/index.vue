@@ -1,8 +1,12 @@
 <template>
   <div class="toolbar">
-    <MapToolbarTree name="Объекты" :items="objects" />
-    <MapToolbarTree name="Техника" :items="techich" />
-    <input type="text" placeholder="Адрес" />
+    <MapToolbarTree
+      v-for="item of items"
+      :key="item.title"
+      :title="item.title"
+      :items="item.items"
+    />
+    <input class="toolbar_search" type="text" placeholder="Адрес" />
   </div>
 </template>
 
@@ -13,11 +17,30 @@ export default defineComponent({
 </script>
 
 <script setup lang="ts">
-import { reactive, defineComponent } from 'vue'
+import { defineComponent } from 'vue'
 import MapToolbarTree from './Tree.vue'
+import { MapToolbarProps } from '@/model'
 
-const objects = reactive(['gz-gon'])
-const techich = reactive(['maz', 'kamaz', 'qewr', 'qwer', 'qwer'])
+withDefaults(defineProps<MapToolbarProps>(), {
+  items: () => {
+    if (import.meta.env.DEV) {
+      return [
+        { title: 'Объекты', items: [{ name: 'gz-gon' }] },
+        {
+          title: 'Техника',
+          items: [
+            { name: 'maz' },
+            { name: 'kamaz' },
+            { name: 'qewr' },
+            { name: 'qewr' },
+            { name: 'qewr' },
+          ],
+        },
+      ]
+    }
+    return []
+  },
+})
 </script>
 
 <style>
@@ -41,5 +64,10 @@ const techich = reactive(['maz', 'kamaz', 'qewr', 'qwer', 'qwer'])
 
   gap: 12.5px;
   padding: 12.5px;
+}
+
+.toolbar_search {
+  border: 0;
+  border-radius: 3px;
 }
 </style>

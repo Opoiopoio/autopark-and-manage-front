@@ -1,20 +1,36 @@
 <template>
   <div
     class="toolbar-tree"
-    ref="toolbarTreeRef"
     @click="onClick"
-    @mouseover="onMouseOver"
+    @mouseenter="onMouseOver"
     @mouseleave="onMouseLeave"
   >
     <div class="toolbar-tree__title">
-      <h5>{{ name }}</h5>
-      <div class="toolbar-tree__collabse-arrow" ref="collabseArrowRef">
+      <h5>{{ title }}</h5>
+      <div
+        class="toolbar-tree__collabse-arrow"
+        :class="{
+          'toolbar-tree__collabse-arrow_opened': itemsIsOpened,
+          // 'toolbar-tree__collabse-arrow_opening': itemsIsOpening,
+          // 'toolbar-tree__collabse-arrow_closing': itemsIsClosing,
+        }"
+      >
         <CollabseArrow height="20px" transform="rotate(90)" />
       </div>
     </div>
-    <div ref="toolbarTreeItemsRef" class="toolbar-tree__items">
-      <div v-for="(item, index) of items" :key="index" class="toolbar-tree__item">
-        {{ item }}
+    <div
+      class="toolbar-tree__items"
+      :class="{
+        'toolbar-tree__items_opened': itemsIsOpened,
+      }"
+    >
+      <div
+        v-for="(item, index) of items"
+        :key="index"
+        @click="item.onClick"
+        class="toolbar-tree__item"
+      >
+        {{ item.name }}
       </div>
     </div>
   </div>
@@ -27,33 +43,26 @@ export default defineComponent({
 </script>
 
 <script setup lang="ts">
-import { onMounted, PropType, ref, defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 import CollabseArrow from '../CollabseArrow.vue'
-defineProps({
-  name: { type: String, required: true },
-  items: { type: Array as PropType<Array<string>>, required: true },
-})
+import { MapToolbarTreeProps } from '@/model'
+defineProps<MapToolbarTreeProps>()
 
-const collabseArrowRef = ref<HTMLDivElement>()
-const toolbarTreeItemsRef = ref<HTMLDivElement>()
+const itemsIsOpened = ref(false)
+// const itemsIsClosing = ref(false)
+// const itemsIsOpening = ref(false)
 
 function onMouseOver() {
-  collabseArrowRef.value?.classList.add('rotated')
-  toolbarTreeItemsRef.value?.classList.add('opened')
+  itemsIsOpened.value = true
 }
 
 function onMouseLeave() {
-  toolbarTreeItemsRef.value?.classList.remove('opened')
-  collabseArrowRef.value?.classList.add('reverse-rotated')
-  collabseArrowRef.value?.classList.remove('rotated')
-  setTimeout(() => collabseArrowRef.value?.classList.remove('reverse-rotated'), 300)
+  itemsIsOpened.value = false
 }
 
 function onClick() {
-  toolbarTreeItemsRef.value?.classList.add('opened')
+  itemsIsOpened.value = !itemsIsOpened.value
 }
-
-onMounted(() => {})
 </script>
 
 <style>
@@ -102,11 +111,11 @@ onMounted(() => {})
   padding: 10px;
   cursor: pointer;
 
-  -webkit-transition: var(--transition-to-btns);
-  -moz-transition: var(--transition-to-btns);
-  -ms-transition: var(--transition-to-btns);
-  -o-transition: var(--transition-to-btns);
-  transition: var(--transition-to-btns);
+  -webkit-transition: var(--transform-collabse-arrow);
+  -moz-transition: var(--transform-collabse-arrow);
+  -ms-transition: var(--transform-collabse-arrow);
+  -o-transition: var(--transform-collabse-arrow);
+  transition: var(--transform-collabse-arrow);
 }
 
 .toolbar-tree__item:hover {
@@ -117,35 +126,31 @@ onMounted(() => {})
   background-color: var(--main-color-darken);
 }
 
-.toolbar-tree__items.opened {
+.toolbar-tree__items_opened {
   display: block;
 }
 
-.reverse-rotated {
-  animation: rotate 0.3s ease;
-  animation-direction: reverse;
-}
-
-.rotated {
-  animation: rotate 0.3s ease;
-  animation-fill-mode: forwards;
+.toolbar-tree__collabse-arrow_opened {
+  transform: rotate(-90deg);
 }
 
 .toolbar-tree__collabse-arrow {
   display: flex;
   flex-direction: row;
   align-items: center;
+
+  --transform-collabse-arrow: 0.3s;
+
+  -webkit-transition: var(--transform-collabse-arrow);
+  -moz-transition: var(--transform-collabse-arrow);
+  -ms-transition: var(--transform-collabse-arrow);
+  -o-transition: var(--transform-collabse-arrow);
+  transition: var(--transform-collabse-arrow);
 }
 
-@keyframes rotate {
+@keyframes tree-rotate {
   to {
     transform: rotate(-90deg);
-  }
-}
-
-@keyframes rotate-reverse {
-  to {
-    transform: rotate(90deg);
   }
 }
 </style>

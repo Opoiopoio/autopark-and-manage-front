@@ -12,7 +12,7 @@ export interface IToolbarHeaderItem {
   ) => void
 }
 
-export type TemplateNames = 'item' | 'inactive'
+// export type TemplateNames = 'item' | 'inactive'
 
 export type Resources = 'tecnical' | 'icon' | 'employee' | 'equipment' | 'object'
 
@@ -36,7 +36,9 @@ export class ToolbarHeaderItem implements IToolbarHeaderItem {
   }
 }
 
-export class ResourceStatuses implements Record<Resources, boolean> {
+export interface IResurceStatuses extends Record<Resources, boolean> {}
+
+export class ResourceStatuses implements IResurceStatuses {
   object: boolean
   tecnical: boolean
   icon: boolean
@@ -51,20 +53,20 @@ export class ResourceStatuses implements Record<Resources, boolean> {
   }
 }
 
-export class ResourceTemplates implements Record<Resources, TemplateNames> {
-  object: TemplateNames
-  tecnical: TemplateNames
-  icon: TemplateNames
-  employee: TemplateNames
-  equipment: TemplateNames
-  constructor(resourceStatuses: Record<Resources, boolean>) {
-    this.tecnical = resourceStatuses.tecnical ? 'item' : 'inactive'
-    this.icon = resourceStatuses.icon ? 'item' : 'inactive'
-    this.employee = resourceStatuses.employee ? 'item' : 'inactive'
-    this.equipment = resourceStatuses.equipment ? 'item' : 'inactive'
-    this.object = resourceStatuses.object ? 'item' : 'inactive'
-  }
-}
+// export class ResourceTemplates implements Record<Resources, TemplateNames> {
+//   object: TemplateNames
+//   tecnical: TemplateNames
+//   icon: TemplateNames
+//   employee: TemplateNames
+//   equipment: TemplateNames
+//   constructor(resourceStatuses: Record<Resources, boolean>) {
+//     this.tecnical = resourceStatuses.tecnical ? 'item' : 'inactive'
+//     this.icon = resourceStatuses.icon ? 'item' : 'inactive'
+//     this.employee = resourceStatuses.employee ? 'item' : 'inactive'
+//     this.equipment = resourceStatuses.equipment ? 'item' : 'inactive'
+//     this.object = resourceStatuses.object ? 'item' : 'inactive'
+//   }
+// }
 
 export class ComputedResourceItems implements Record<Resources, object> {
   readonly object: ComputedRef<IObject[]>

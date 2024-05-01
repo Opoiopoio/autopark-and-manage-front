@@ -28,24 +28,17 @@ defineProps({ name: String, url: String })
   position: relative;
 
   display: flex;
-  vertical-align: center;
+  align-items: center;
 
-  /* width: 100%; */
-  max-width: 100%;
+  width: 100%;
   height: 100%;
 }
 
-/* .card-icon__flex {
-
-
-  max-width: 100%;
-  height: 100%;
-} */
-
 .card-icon__image-container > img {
-  /* margin: var(--items-margin); */
   border-radius: var(--brd-radius);
-  width: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  width: auto;
   height: auto;
 }
 

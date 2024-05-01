@@ -63,16 +63,13 @@ export const useTchicalStore = defineStore('technical', () => {
 
   function create(data: ITectical[]) {
     data.forEach((technic) => {
-      onAddOrChangeTechnic(technic)
+      onAddTechnic(technic)
     })
   }
 
   function update(data: ITectical[]) {
     data.forEach((technic) => {
-      if (markers[technic.number]) {
-        mapStore.removeMarker(markers[technic.number])
-      }
-      onAddOrChangeTechnic(technic)
+      onChangeTechnic(technic)
     })
   }
 
@@ -86,12 +83,19 @@ export const useTchicalStore = defineStore('technical', () => {
     })
   }
 
-  function onAddOrChangeTechnic(tectical: ITectical) {
+  function onAddTechnic(tectical: ITectical) {
     const marker = new MarkerToTecnical(tectical)
     addMarker({ marker, number: tectical.number })
     addTechnic(tectical)
 
     mapStore.addMarker(marker)
+  }
+
+  function onChangeTechnic(technic: ITectical) {
+    if (markers[technic.number]) {
+      markers[technic.number].setLatLng(technic.location)
+    }
+    addTechnic(technic)
   }
 
   return { items, markers, get, create, update, remove }

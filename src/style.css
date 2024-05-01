@@ -38,6 +38,10 @@ button {
   font-size: 16px;
 }
 
+.marker-icon {
+  transition: 5s;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     --ft-light-color: #213547;

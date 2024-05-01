@@ -22,16 +22,19 @@ export class MarkerToObject extends Marker {
         iconAnchor: [16, 32],
       }),
     })
-    this.bindTooltip(`
-<div class="card-object">
-  <div class="card-object__image-container">
-    <img src="${object.icon}" alt="${object.name}" />
-    <h4>${object.name}</h4>
-  </div>
-  <h4 class="card-object__manager">Руководитель: ${object.manager}</h4>
-  <p class="card-object__edited_date">
-    Дата изменения: ${object.edited_date?.toLocaleString()}
-  </p>
-</div>`)
+
+    const form = `
+    <div class="card-object card-object_popup">
+      <div class="card-object__image-container">
+        <img src="${object.icon}" alt="${object.name}" />
+        <h4>${object.name}</h4>
+      </div>
+      <h4 class="card-object__manager">Руководитель: ${object.manager}</h4>
+      <p class="card-object__edited_date">
+        Дата изменения: ${object.edited_date?.toLocaleString()}
+      </p>
+    </div>`
+    this.bindTooltip(form)
+    this.bindPopup(form)
   }
 }

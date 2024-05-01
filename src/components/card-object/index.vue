@@ -1,9 +1,11 @@
 <template>
   <div class="card-object">
     <div class="card-object__image-container" @click="onImageClick">
-      <img :src="icon" :alt="name" />
-      <h4>{{ name }}</h4>
+      <div class="card-object__image-aligner">
+        <img class="card-object__image" :src="icon" :alt="name" />
+      </div>
     </div>
+    <h4 class="card-object__name">Название: {{ name }}</h4>
     <h4 class="card-object__manager">Руководитель: {{ manager }}</h4>
     <CardObjectTechnical :items="technical" />
     <div class="card-object__complete-status">
@@ -39,7 +41,7 @@ import { useMapStore } from '@/store'
 
 const store = useMapStore()
 
-const props = withDefaults(defineProps<IObject>(), { complete_status: () => 0 })
+const props = withDefaults(defineProps<Partial<IObject>>(), { complete_status: () => 0 })
 
 function onImageClick() {
   if (!props.location) return
@@ -65,35 +67,61 @@ const completeStatusNoteStyle = computed(() => {
   --brd-radius: 7px;
 
   width: calc(100% - 40px);
-  height: calc(100% - 40px);
+
+  min-height: calc(100% - 40px);
+  max-height: 100%;
 
   padding: 20px;
   --items-margin: 0 20px;
 }
 
-.card-object__image-container {
-  position: relative;
+.card-object_popup {
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
 
+.card-object_popup > .card-object__manager {
+  margin: 10px 0;
+}
+
+.card-object_popup > .card-object__edited_date {
+  margin: 10px 0;
+}
+
+.card-object__image-container {
   cursor: pointer;
 
   width: 100%;
   height: 50%;
+  --min-height: 174px;
+  min-height: var(--min-height);
 }
 
-.card-object__image-container > img {
+.card-object__image-aligner {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  min-height: var(--min-height);
+  width: 100%;
+}
+
+.card-object__image {
+  /* object-fit: none; */
+  /* position: absolute;
+  top: 50%;
+  transform: translateY(-50%); */
   /* margin: var(--items-margin); */
   border-radius: var(--brd-radius);
-  width: 100%;
+  width: auto;
   height: auto;
+  max-width: 100%;
+  max-height: 100%;
 }
 
-.card-object__image-container > h4 {
-  position: absolute;
-
-  color: var(--ft-light-color);
-
-  bottom: 20px;
+.card-object__name {
   margin: var(--items-margin);
+  margin-top: 10px;
 }
 
 .card-object__manager {
