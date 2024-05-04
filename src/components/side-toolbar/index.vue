@@ -61,13 +61,12 @@ export default defineComponent({
 </script>
 
 <script setup lang="ts">
-import { defineComponent, Ref, ref } from 'vue'
+import { defineComponent, ref } from 'vue'
 
 import CallabseArrow from '../CollabseArrow.vue'
 import SideToolbarHeader from './Header.vue'
 import { IToolbarHeaderItem, ToolbarHeaderItem } from '@/model'
 import { useRouter } from 'vue-router'
-import { PageNameEnum } from '@/router/lib/page-name.enum'
 
 // const store = useStore()
 
@@ -75,23 +74,18 @@ const headerItems = ['Огранизация']
 
 const router = useRouter()
 
-const headerMenuItems: Ref<IToolbarHeaderItem[]> = ref([
-  new ToolbarHeaderItem('Объекты', () => {
-    router.push({ name: PageNameEnum.objectList })
-  }),
-  new ToolbarHeaderItem('Иконки', () => {
-    router.push({ name: PageNameEnum.iconList })
-  }),
-  new ToolbarHeaderItem('Работники', () => {
-    router.push({ name: PageNameEnum.employeeList })
-  }),
-  new ToolbarHeaderItem('Техника', () => {
-    router.push({ name: PageNameEnum.tecnicalList })
-  }),
-  new ToolbarHeaderItem('Оборудование', () => {
-    router.push({ name: PageNameEnum.equipmentList })
-  }),
-])
+const headerMenuItems = router.getRoutes().reduce((array, route) => {
+  const { headerTitle } = route.meta
+  if (!headerTitle) return array
+  else if (!route.meta.isList) return array
+
+  array.push(
+    new ToolbarHeaderItem(headerTitle as string, () => {
+      router.push({ name: route.name })
+    })
+  )
+  return array
+}, new Array<IToolbarHeaderItem>())
 
 const isOpened = ref(false)
 const isClosing = ref(false)

@@ -1,7 +1,12 @@
 <template>
   <CardsContainer :items="items">
     <template #item="{ item }">
-      <CardIcon :name="item.name" :url="item.url" />
+      <CardEmployee
+        :id="item.id"
+        :name="item.name"
+        :position="item.position"
+        :marker_color="item.marker_color"
+      />
     </template>
   </CardsContainer>
 </template>
@@ -10,14 +15,18 @@
 import { computed, onMounted } from 'vue'
 
 import { CardsContainer } from '@/components/side-toolbar'
-import CardIcon from '@/components/CardIcon.vue'
-import { useIconStore } from '@/store'
+import CardEmployee from '@/components/CardEmployee.vue'
+import { useEmployeeStore } from '@/store'
 
-const store = useIconStore()
+const store = useEmployeeStore()
 
 const items = computed(() => Object.values(store.items))
 
 onMounted(async () => {
   await store.get()
+
+  console.log('store', store)
+
+  console.log(items.value)
 })
 </script>

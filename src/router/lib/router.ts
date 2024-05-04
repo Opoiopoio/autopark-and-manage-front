@@ -4,6 +4,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 
 import { beforeEachCallback } from './before.each.hook'
 import { PageNameEnum } from './page-name.enum'
+import { PageTitleEnum } from './page-title.enum'
 
 export const router = createRouter({
   routes: [
@@ -23,6 +24,11 @@ export const router = createRouter({
       component: () => import('@/pages/TechnicalList.vue'),
     },
     {
+      path: '/employee/list',
+      name: PageNameEnum.employeeList,
+      component: () => import('@/pages/EmployeeList.vue'),
+    },
+    {
       path: '/',
       redirect: `/object/list`,
     },
@@ -32,6 +38,21 @@ export const router = createRouter({
     },
   ],
   history: createWebHashHistory(),
+})
+
+router.getRoutes().forEach((route) => {
+  if (!route.name) return
+  else if ((route.name as string)?.endsWith('-list')) {
+    route.meta.isList = true
+  }
+
+  const pageName = route.name as PageNameEnum
+
+  const headerTitle = PageTitleEnum[pageName]
+
+  if (!headerTitle) return
+
+  route.meta.headerTitle = headerTitle
 })
 
 router.beforeEach(beforeEachCallback())
