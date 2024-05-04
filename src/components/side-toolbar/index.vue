@@ -22,14 +22,7 @@
       >
         <SideToolbarHeader :menu-items="headerMenuItems" :items="headerItems" />
         <div class="content-box__body">
-          <SideToolbarBody
-            @update:resource="onUpdateResource"
-            :employee="resourceStatuses.employee"
-            :equipment="resourceStatuses.equipment"
-            :icon="resourceStatuses.icon"
-            :object="resourceStatuses.object"
-            :tecnical="resourceStatuses.tecnical"
-          />
+          <slot></slot>
         </div>
       </div>
 
@@ -68,35 +61,36 @@ export default defineComponent({
 </script>
 
 <script setup lang="ts">
-import { defineComponent, reactive, Ref, ref } from 'vue'
+import { defineComponent, Ref, ref } from 'vue'
 
 import CallabseArrow from '../CollabseArrow.vue'
 import SideToolbarHeader from './Header.vue'
-import SideToolbarBody from './Body.vue'
-import {
-  IToolbarHeaderItem,
-  Resources,
-  ResourceStatuses,
-  ToolbarHeaderItem,
-  UpdateResourceValue,
-} from '@/model'
+import { IToolbarHeaderItem, ToolbarHeaderItem } from '@/model'
+import { useRouter } from 'vue-router'
+import { PageNameEnum } from '@/router/lib/page-name.enum'
 
 // const store = useStore()
 
-const resourceStatuses = reactive<Record<Resources, boolean>>(new ResourceStatuses())
-
-function onUpdateResource(value: UpdateResourceValue) {
-  resourceStatuses[value.resource] = value.value
-}
-
 const headerItems = ['Огранизация']
 
+const router = useRouter()
+
 const headerMenuItems: Ref<IToolbarHeaderItem[]> = ref([
-  new ToolbarHeaderItem('Объекты', resourceStatuses, 'object'),
-  new ToolbarHeaderItem('Иконки', resourceStatuses, 'icon'),
-  new ToolbarHeaderItem('Работники', resourceStatuses, 'employee'),
-  new ToolbarHeaderItem('Техника', resourceStatuses, 'tecnical'),
-  new ToolbarHeaderItem('Оборудование', resourceStatuses, 'equipment'),
+  new ToolbarHeaderItem('Объекты', () => {
+    router.push({ name: PageNameEnum.objectList })
+  }),
+  new ToolbarHeaderItem('Иконки', () => {
+    router.push({ name: PageNameEnum.iconList })
+  }),
+  new ToolbarHeaderItem('Работники', () => {
+    router.push({ name: PageNameEnum.employeeList })
+  }),
+  new ToolbarHeaderItem('Техника', () => {
+    router.push({ name: PageNameEnum.tecnicalList })
+  }),
+  new ToolbarHeaderItem('Оборудование', () => {
+    router.push({ name: PageNameEnum.equipmentList })
+  }),
 ])
 
 const isOpened = ref(false)

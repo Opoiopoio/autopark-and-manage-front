@@ -55,7 +55,7 @@
               :key="index"
               @click="item.onClick(item.resourceStatuses, item.watchedResource)"
             >
-              {{ item.tittle }}
+              {{ item.title }}
             </div>
           </div>
         </Transition>

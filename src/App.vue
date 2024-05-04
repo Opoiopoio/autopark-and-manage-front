@@ -1,15 +1,24 @@
 <script setup lang="ts">
-import MainMap from './components/MainMap.vue'
-import { MapToolbar } from './components/map-toolbar'
-import { SideToolbar } from './components/side-toolbar'
+import { shallowRef, watch } from 'vue'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+
+const mainLayout = shallowRef(route.meta.layout)
+
+console.log(route.meta)
+
+watch(
+  () => route.meta.layoutName,
+  () => {
+    console.log(route.meta)
+    mainLayout.value = route.meta.layout
+  }
+)
 </script>
 
 <template>
-  <div>
-    <MainMap />
-    <MapToolbar />
-    <SideToolbar />
-  </div>
+  <component :is="mainLayout"> <slot /></component>
 </template>
 
 <style lang="scss">
