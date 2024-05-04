@@ -25,8 +25,6 @@ const store = useObjectStore()
 
 const items = computed(() => Object.values(store.items))
 
-console.log()
-
 onMounted(async () => {
   await store.get()
 })

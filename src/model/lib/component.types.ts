@@ -5,8 +5,6 @@ export interface IToolbarHeaderItem {
 
 // export type TemplateNames = 'item' | 'inactive'
 
-export type Resources = 'tecnical' | 'icon' | 'employee' | 'equipment' | 'object'
-
 export class ToolbarHeaderItem implements IToolbarHeaderItem {
   title: string
   onClick?: (e: MouseEvent) => void
