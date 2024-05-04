@@ -14,6 +14,7 @@ export class MarkerIcon extends String {
       .replace('{{ CENTRAL_LiNE_COLOR }}', fullParams.centralLineColor)
       .replace('{{ MAIN_COLOR }}', fullParams.mainColor)
       .replace('{{ SUB_COLOR }}', fullParams.subColor)
+
     super(`data:image/svg+xml;base64,${window.btoa(icon)}`)
   }
 }

@@ -7,6 +7,7 @@
     >
       Техника: {{ techicalMarks ?? 'отсутствует' }}
     </h4>
+
     <div class="technical__items-container">
       <div
         class="technical__items"
@@ -31,16 +32,22 @@
   </div>
 </template>
 
+<script lang="ts">
+export default defineComponent({
+  name: 'CardObjectTecnical',
+})
+</script>
+
 <script setup lang="ts">
-import { computed, PropType, ref } from 'vue'
-import { useStore } from 'vuex'
+import { computed, PropType, ref, defineComponent } from 'vue'
 import { ITectical } from '../../model'
+import { useMapStore } from '@/store'
 
 const props = defineProps({
   items: Array as PropType<ITectical[]>,
 })
 
-const store = useStore()
+const store = useMapStore()
 
 const isShowed = computed(() => {
   return props.items?.length != 0
@@ -69,7 +76,7 @@ function onShowAnimationEnd() {
 
 function onTechnicalItemClick(item: ITectical) {
   onHeaderClick()
-  store.dispatch('flyTo', item.location)
+  store.flyTo(item.location)
 }
 
 function onHeaderClick() {
@@ -85,6 +92,9 @@ function onHeaderClick() {
 <style>
 .technical {
   margin: var(--items-margin);
+  height: 21px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .technical__items-container {
@@ -95,22 +105,13 @@ function onHeaderClick() {
 }
 
 .technical__header {
-  display: flex;
-  justify-content: space-between;
-  cursor: pointer;
-  width: 100%;
+  max-width: 100%;
   margin: 0;
-  padding-top: 10px;
-
-  white-space: nowrap;
 
   overflow: hidden;
-}
+  text-overflow: ellipsis;
 
-.technical__header::after {
-  content: '';
-  background: url('/src/assets/arrow.svg');
-  height: 100%;
+  white-space: nowrap;
 }
 
 .technical__items {
@@ -136,7 +137,6 @@ function onHeaderClick() {
 
   --an-duration: 0.3s;
   --an-fill-mode: forwards;
-  padding: 5px 10px;
 }
 
 .technical__items_showind-up {
@@ -160,6 +160,21 @@ function onHeaderClick() {
 
 .technical__item {
   cursor: pointer;
+  padding: 5px 10px;
+
+  -webkit-transition: var(--transition-to-btns);
+  -moz-transition: var(--transition-to-btns);
+  -ms-transition: var(--transition-to-btns);
+  -o-transition: var(--transition-to-btns);
+  transition: var(--transition-to-btns);
+}
+
+.technical__item:hover {
+  background-color: var(--main-color-lighten);
+}
+
+.technical__item:active {
+  background-color: var(--main-color-darken);
 }
 
 .technical__item__mark,

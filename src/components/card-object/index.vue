@@ -1,11 +1,13 @@
 <template>
   <div class="card-object">
     <div class="card-object__image-container" @click="onImageClick">
-      <img :src="image" :alt="name" />
-      <h4>{{ name }}</h4>
+      <div class="card-object__image-aligner">
+        <img class="card-object__image" :src="icon" :alt="name" />
+      </div>
     </div>
+    <h4 class="card-object__name">Название: {{ name }}</h4>
     <h4 class="card-object__manager">Руководитель: {{ manager }}</h4>
-    <ObjectTechnical :items="technical" />
+    <CardObjectTechnical :items="technical" />
     <div class="card-object__complete-status">
       <p
         class="card-object__complete-status__note"
@@ -24,34 +26,32 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { computed, PropType } from 'vue'
-import { ITectical } from '../../model'
-import { useStore } from 'vuex'
-import { processTaskColors } from '../../utils'
-import ObjectTechnical from './CardObjectTechnical.vue'
-
-const store = useStore()
-
-const props = defineProps({
-  name: String,
-  image: String,
-  manager: String,
-  technical: Array as PropType<ITectical[]>,
-  location: Object as PropType<[number, number]>,
-  complete_status: { type: Number, default: () => 0 },
-  edited_date: Date,
+<script lang="ts">
+export default defineComponent({
+  name: 'CardObject',
 })
+</script>
+
+<script setup lang="ts">
+import { computed, defineComponent } from 'vue'
+import { IObject } from '@/model'
+import { processTaskColors } from '@/utils'
+import CardObjectTechnical from './Technical.vue'
+import { useMapStore } from '@/store'
+
+const store = useMapStore()
+
+const props = withDefaults(defineProps<Partial<IObject>>(), { complete_status: () => 0 })
 
 function onImageClick() {
   if (!props.location) return
-  console.log(props.location)
 
-  store.dispatch('flyTo', props.location)
+  store.flyTo(props.location)
 }
 
 const completeStatusFontColor = computed(() => {
   if (props.complete_status >= 53) return 'white'
+  return undefined
 })
 
 const completeStatusNoteStyle = computed(() => {
@@ -65,46 +65,63 @@ const completeStatusNoteStyle = computed(() => {
 <style>
 .card-object {
   --brd-radius: 7px;
-  /* border: solid 1px #fff; */
-  border-radius: var(--brd-radius);
 
   width: calc(100% - 40px);
-  height: calc(100% - 40px);
 
-  background-color: rgba(255, 255, 255, 0.4);
-
-  /* backdrop-filter: blur(20px); */
-
-  /* color: var(--ft-light-color); */
-  box-shadow: 0px 2px 10px gray;
+  min-height: calc(100% - 40px);
+  max-height: 100%;
 
   padding: 20px;
   --items-margin: 0 20px;
 }
 
-.card-object__image-container {
-  position: relative;
-
-  cursor: pointer;
-
-  width: 100%;
-  height: 50%;
-}
-
-.card-object__image-container > img {
-  /* margin: var(--items-margin); */
-  border-radius: var(--brd-radius);
+.card-object_popup {
+  padding: 0;
   width: 100%;
   height: 100%;
 }
 
-.card-object__image-container > h4 {
-  position: absolute;
+.card-object_popup > .card-object__manager {
+  margin: 10px 0;
+}
 
-  color: var(--ft-light-color);
+.card-object_popup > .card-object__edited_date {
+  margin: 10px 0;
+}
 
-  bottom: 20px;
+.card-object__image-container {
+  cursor: pointer;
+
+  width: 100%;
+  height: 50%;
+  --min-height: 174px;
+  min-height: var(--min-height);
+}
+
+.card-object__image-aligner {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  min-height: var(--min-height);
+  width: 100%;
+}
+
+.card-object__image {
+  /* object-fit: none; */
+  /* position: absolute;
+  top: 50%;
+  transform: translateY(-50%); */
+  /* margin: var(--items-margin); */
+  border-radius: var(--brd-radius);
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.card-object__name {
   margin: var(--items-margin);
+  margin-top: 10px;
 }
 
 .card-object__manager {

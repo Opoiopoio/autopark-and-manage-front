@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-v-model-argument -->
 <template>
   <div
     class="side-toolbar"
@@ -21,19 +22,7 @@
       >
         <SideToolbarHeader :menu-items="headerMenuItems" :items="headerItems" />
         <div class="content-box__body">
-          <CardsContainer :items="objects" template="item">
-            <template #[resourceTemplates.object]="{ item }">
-              <CardObject
-                :complete_status="item.complete_status"
-                :edited_date="item.edited_date"
-                :image="item.icon"
-                :location="item.location"
-                :manager="item.manager"
-                :technical="item.technical"
-                :name="item.name"
-              />
-            </template>
-          </CardsContainer>
+          <slot></slot>
         </div>
       </div>
 
@@ -65,79 +54,44 @@
   </div>
 </template>
 
+<script lang="ts">
+export default defineComponent({
+  name: 'SideToolbar',
+})
+</script>
+
 <script setup lang="ts">
-import { computed, reactive, Ref, ref, watch } from 'vue'
-import { useStore } from 'vuex'
+import { defineComponent, Ref, ref } from 'vue'
 
-import CallabseArrow from './CollabseArrow.vue'
-import SideToolbarHeader from './SideToolbarHeader.vue'
-import CardsContainer from './CardsContainer.vue'
-import CardObject from './card-object/CardObject.vue'
+import CallabseArrow from '../CollabseArrow.vue'
+import SideToolbarHeader from './Header.vue'
+import { IToolbarHeaderItem, ToolbarHeaderItem } from '@/model'
+import { useRouter } from 'vue-router'
+import { PageNameEnum } from '@/router/lib/page-name.enum'
 
-import {
-  IObject,
-  IToolbarHeaderItem,
-  Resources,
-  ResourceStatuses,
-  ResourceTemplates,
-  TemplateNames,
-  ToolbarHeaderItem,
-} from '../model'
+// const store = useStore()
 
-const resourceStatuses = reactive<Record<Resources, boolean>>(new ResourceStatuses())
+const headerItems = ['Огранизация']
 
-const activeField = computed<Resources>((getter) => {
-  const trueValues = Object.values(resourceStatuses).filter((value) => value == true)
-  const keys = Object.keys(resourceStatuses) as Resources[]
-
-  oldValue = getter
-
-  if (trueValues.length == 1)
-    return keys.find((key) => resourceStatuses[key]) as Resources
-  else return keys.find((key) => key != getter && resourceStatuses[key]) as Resources
-})
-
-const resourceTemplates = computed<Record<Resources, TemplateNames>>(() => {
-  const result = new ResourceTemplates(resourceStatuses)
-  console.log(result)
-  return result
-})
-
-let oldValue: Resources | undefined
-
-watch(
-  () => activeField,
-  () => {
-    if (Object.values(resourceStatuses).filter((value) => value == true).length == 1)
-      return
-    else if (oldValue) resourceStatuses[oldValue] = false
-  },
-  { deep: true }
-)
-
-const store = useStore()
-const headerItems = ['Огранизация', 'qewr']
+const router = useRouter()
 
 const headerMenuItems: Ref<IToolbarHeaderItem[]> = ref([
-  new ToolbarHeaderItem('Объекты', resourceStatuses, 'object'),
-  new ToolbarHeaderItem('Иконки', resourceStatuses, 'icon'),
-  new ToolbarHeaderItem('Работники', resourceStatuses, 'employee'),
-  new ToolbarHeaderItem('Техника', resourceStatuses, 'tecnical'),
-  new ToolbarHeaderItem('Оборудование', resourceStatuses, 'equipment'),
+  new ToolbarHeaderItem('Объекты', () => {
+    router.push({ name: PageNameEnum.objectList })
+  }),
+  new ToolbarHeaderItem('Иконки', () => {
+    router.push({ name: PageNameEnum.iconList })
+  }),
+  new ToolbarHeaderItem('Работники', () => {
+    router.push({ name: PageNameEnum.employeeList })
+  }),
+  new ToolbarHeaderItem('Техника', () => {
+    router.push({ name: PageNameEnum.tecnicalList })
+  }),
+  new ToolbarHeaderItem('Оборудование', () => {
+    router.push({ name: PageNameEnum.equipmentList })
+  }),
 ])
-
-store.dispatch('technical/get')
-store.dispatch('object/get')
-
-// const technical = computed(() => {
-//   const technic = store.getters['technical/technical']
-//   return Object.values<ITectical>(technic)
-// })
-
-const objects = computed(() => {
-  const technic = store.getters['object/objects']
-  return Object.values<IObject>(technic)
-})
 
 const isOpened = ref(false)
 const isClosing = ref(false)
@@ -271,8 +225,6 @@ function onArrowAnimationEnd(e: AnimationEvent) {
 .content-box__body {
   height: calc(100% - 55px);
   margin: 0;
-  display: flex;
-  flex-direction: column;
 }
 
 .absolute {
@@ -316,11 +268,22 @@ function onArrowAnimationEnd(e: AnimationEvent) {
   border: solid #fff 0.5px;
   border-radius: 100px;
 
+  -webkit-transition: var(--transition-to-btns);
+  -moz-transition: var(--transition-to-btns);
+  -ms-transition: var(--transition-to-btns);
+  -o-transition: var(--transition-to-btns);
+  transition: var(--transition-to-btns);
+
   /* z-index: 300; */
 }
 
 .show-button:hover {
-  background-color: var(--main-monochrome);
+  background-color: var(--main-color-lighten);
+  cursor: pointer;
+}
+
+.show-button:active {
+  background-color: var(--main-color-darken);
 }
 
 .arrow {

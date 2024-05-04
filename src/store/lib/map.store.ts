@@ -1,65 +1,49 @@
-import { Module } from 'vuex'
 import leaflet, { Marker, Map } from 'leaflet'
-import { MapState } from '../../model'
+import { defineStore } from 'pinia'
+import { ref } from 'vue'
 
-export const mapModule: Module<MapState, MapState> = {
-  state: {
-    map: null,
-  },
-  getters: {
-    map(state) {
-      return state.map
-    },
-  },
-  mutations: {
-    setMap(state, elem: HTMLDivElement) {
-      if (state.map == null) {
-        state.map = leaflet
-          .map(elem, { zoomControl: false })
-          .setView([55.751574, 37.573856], 15)
+import { MarkerQueue } from '@/utils'
 
-        leaflet
-          .tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution:
-              // 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
-              '',
-          })
-          .addTo(state.map)
-      }
-    },
-  },
-  actions: {
-    flyTo(context, location: [number, number]) {
-      document.querySelector('#show-button')?.dispatchEvent(new MouseEvent('click'))
+const markerQueue = new MarkerQueue()
 
-      try {
-        context.state.map?.flyTo(location, 15)
-      } catch (error) {
-        console.error(error)
-      }
-    },
+export const useMapStore = defineStore('map', () => {
+  const map = ref<Map>()
+  function setMap(elem: HTMLDivElement) {
+    if (map.value == null) {
+      map.value = leaflet
+        .map(elem, { zoomControl: false })
+        .setView([55.751574, 37.573856], 15)
 
-    addMarker(context, marker: Marker) {
-      const map = context.state.map
+      leaflet
+        .tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution:
+            // 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+            '',
+        })
+        .addTo(map.value)
 
-      console.log(map)
+      markerQueue.process(map.value)
+    }
+  }
 
-      if (!map) {
-        this.watch(
-          (state) => state.map,
-          (value) => {
-            console.log('watch', value)
-            marker.addTo(value as Map)
-          },
-          { once: true }
-        )
-        return
-      }
-      marker.addTo(map)
-    },
+  function flyTo(location: [number, number]) {
+    document.querySelector('#show-button')?.dispatchEvent(new MouseEvent('click'))
 
-    removeMarker(context, marker: Marker) {
-      context.state.map?.removeLayer(marker)
-    },
-  },
-}
+    try {
+      map.value?.flyTo(location, 15)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  function addMarker(marker: Marker) {
+    if (!map.value) {
+      markerQueue.add(marker)
+    } else marker.addTo(map.value)
+  }
+  function removeMarker(marker: Marker) {
+    map.value?.removeLayer(marker)
+  }
+
+  return { map, setMap, flyTo, addMarker, removeMarker }
+})
