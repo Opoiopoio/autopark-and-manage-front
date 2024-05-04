@@ -33,6 +33,10 @@ export interface WithName {
   name: string
 }
 
+export interface WithId {
+  id: number
+}
+
 export interface WithNumber {
   number: string
 }
