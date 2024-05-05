@@ -26,15 +26,17 @@ export class MarkerToObject extends Marker {
     const form = `
     <div class="card-object card-object_popup">
       <div class="card-object__image-container">
-        <img src="${object.icon}" alt="${object.name}" />
-        <h4>${object.name}</h4>
+        <div class="card-object__image-aligner">
+          <img class="card-object__image" src="${object.icon}" alt="${object.name}" />
+        </div>
       </div>
+      <h4 class="card-object__name">Название: ${object.name}</h4>
       <h4 class="card-object__manager">Руководитель: ${object.manager}</h4>
       <p class="card-object__edited_date">
         Дата изменения: ${object.edited_date?.toLocaleString()}
       </p>
     </div>`
     this.bindTooltip(form)
-    this.bindPopup(form)
+    // this.bindPopup(form)
   }
 }

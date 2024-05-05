@@ -77,14 +77,12 @@ const completeStatusNoteStyle = computed(() => {
 
 .card-object_popup {
   padding: 0;
-  width: 100%;
+  width: 300px;
   height: 100%;
 }
 
-.card-object_popup > .card-object__manager {
-  margin: 10px 0;
-}
-
+.card-object_popup > .card-object__name,
+.card-object_popup > .card-object__manager,
 .card-object_popup > .card-object__edited_date {
   margin: 10px 0;
 }
