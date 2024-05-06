@@ -1,18 +1,11 @@
 import { Marker, Icon } from 'leaflet'
+
 import { AuthState, IObject } from '@/model'
 import { MarkerIcon } from './marker.icon'
-import { _UnwrapAll, Store } from 'pinia'
+import { useObjectStore } from '@/store'
 
 export class MarkerToObject extends Marker {
-  constructor(
-    object: IObject,
-    authState: Store<
-      'auth',
-      _UnwrapAll<Pick<AuthState, keyof AuthState>>,
-      Pick<AuthState, never>,
-      Pick<AuthState, never>
-    >
-  ) {
+  constructor(object: IObject, authState: AuthState) {
     const mainColor = authState.name == object.manager ? authState.markerColor : undefined
 
     super(object.location, {
@@ -21,6 +14,23 @@ export class MarkerToObject extends Marker {
         iconSize: [32, 32],
         iconAnchor: [16, 32],
       }),
+      draggable: true,
+    })
+
+    this.on('dragstart', (e) => {
+      console.log(e)
+    })
+
+    this.on('dragend', async (e) => {
+      console.log(e.target._latlng)
+
+      const objectStore = useObjectStore()
+
+      const data = { ...object }
+      const { lat, lng } = e.target._latlng
+      data.location = [lat, lng]
+
+      await objectStore.patch(data)
     })
 
     const form = `

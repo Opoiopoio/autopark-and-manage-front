@@ -1,17 +1,17 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
-import { AuthState } from '@/model'
+import { reactive, ref } from 'vue'
 
-export const useAuthStore = defineStore('auth', (): AuthState => {
+export const useAuthStore = defineStore('auth', () => {
   const name = ref<string>()
   const markerColor = ref<string>()
   const accessToken = ref<string>()
   const refreshToken = ref<string>()
+  const roles = reactive(new Set<string>())
 
   if (import.meta.env.DEV) {
     markerColor.value = '#fff'
     name.value = 'Остапчук Семен Тимофеевич'
   }
 
-  return { name, markerColor, accessToken, refreshToken }
+  return { name, markerColor, accessToken, refreshToken, roles }
 })

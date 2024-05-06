@@ -21,8 +21,9 @@ export interface TechnicalState {
 }
 
 export interface AuthState {
-  markerColor: Ref<string | undefined>
-  name: Ref<string | undefined>
-  accessToken: Ref<string | undefined>
-  refreshToken: Ref<string | undefined>
+  markerColor: string | undefined
+  name: string | undefined
+  accessToken: string | undefined
+  refreshToken: string | undefined
+  roles: Set<string>
 }

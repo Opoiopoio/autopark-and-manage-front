@@ -37,6 +37,7 @@ export const useObjectStore = defineStore('object', () => {
           location: [56, 37.574],
           complete_status: 10,
           technical: technical.value,
+          owner: true,
           edited_date: new Date(),
         },
         {
@@ -46,6 +47,7 @@ export const useObjectStore = defineStore('object', () => {
           location: [54, 38],
           complete_status: 20,
           technical: technical.value,
+          owner: true,
           edited_date: new Date(),
         },
         {
@@ -55,6 +57,7 @@ export const useObjectStore = defineStore('object', () => {
           location: [53, 36],
           complete_status: 30,
           technical: technical.value,
+          owner: true,
           edited_date: new Date(),
         },
         {
@@ -64,6 +67,7 @@ export const useObjectStore = defineStore('object', () => {
           location: [55, 37.573856],
           complete_status: 40,
           technical: technical.value,
+          owner: true,
           edited_date: new Date(),
         },
         {
@@ -73,6 +77,7 @@ export const useObjectStore = defineStore('object', () => {
           location: [58, 37.573856],
           complete_status: 50,
           technical: technical.value,
+          owner: true,
           edited_date: new Date(),
         },
         {
@@ -82,6 +87,7 @@ export const useObjectStore = defineStore('object', () => {
           location: [56.751574, 39.573856],
           complete_status: 60,
           technical: technical.value,
+          owner: true,
           edited_date: new Date(),
         },
         {
@@ -91,6 +97,7 @@ export const useObjectStore = defineStore('object', () => {
           location: [51.751574, 34.573856],
           complete_status: 70,
           technical: technical.value,
+          owner: true,
           edited_date: new Date(),
         },
         {
@@ -100,6 +107,7 @@ export const useObjectStore = defineStore('object', () => {
           location: [54.751574, 31.573856],
           complete_status: 80,
           technical: technical.value,
+          owner: true,
           edited_date: new Date(),
         },
         {
@@ -109,6 +117,7 @@ export const useObjectStore = defineStore('object', () => {
           location: [50.751574, 30.573856],
           complete_status: 90,
           technical: technical.value,
+          owner: true,
           edited_date: new Date(),
         },
         {
@@ -118,6 +127,7 @@ export const useObjectStore = defineStore('object', () => {
           location: [60.751574, 30.573856],
           complete_status: 100,
           technical: technical.value,
+          owner: true,
           edited_date: new Date(),
         },
       ]
@@ -129,7 +139,7 @@ export const useObjectStore = defineStore('object', () => {
         .get<IObject[]>(`${config.baseUrl}/object`, {
           params: { name },
         })
-        .then((res) => res.data))
+        .then(({ data }) => data))
 
     create(data)
   }
@@ -139,6 +149,7 @@ export const useObjectStore = defineStore('object', () => {
       onAddOrChangeObject(object)
     })
   }
+
   function update(data: IObject[]) {
     data.forEach((object) => {
       mapStore
@@ -146,6 +157,7 @@ export const useObjectStore = defineStore('object', () => {
       onAddOrChangeObject(object)
     })
   }
+
   function remove(data: WithName[]) {
     data.forEach(({ name }) => {
       if (markers[name]) mapStore.removeMarker(markers[name])
@@ -153,6 +165,10 @@ export const useObjectStore = defineStore('object', () => {
       delete markers[name]
       delete items[name]
     })
+  }
+
+  async function patch(data: IObject) {
+    await axios.patch(`${config.baseUrl}/object`, data)
   }
 
   function onAddOrChangeObject(object: IObject) {
@@ -163,5 +179,5 @@ export const useObjectStore = defineStore('object', () => {
     mapStore.addMarker(marker)
   }
 
-  return { items, markers, get, create, update, remove }
+  return { items, markers, get, create, update, remove, patch }
 })

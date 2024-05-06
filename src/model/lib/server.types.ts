@@ -10,6 +10,7 @@ export interface IObject {
   technical: ITectical[]
   location: [number, number]
   complete_status: number
+  owner: boolean
   edited_date: Date
 }
 
@@ -19,6 +20,7 @@ export interface ITectical {
   icon: string
   number: string
   driver: string
+  owner: boolean
   location: [number, number]
 }
 

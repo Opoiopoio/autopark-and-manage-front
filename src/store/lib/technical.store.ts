@@ -39,6 +39,7 @@ export const useTchicalStore = defineStore('technical', () => {
           icon: belaz,
           mark: 'Джон Бот 008',
           location: [55.751574, 37.573856],
+          owner: true,
           number: 'X123QW36',
         },
         {
@@ -47,6 +48,7 @@ export const useTchicalStore = defineStore('technical', () => {
           icon: kran,
           mark: 'Джон Бот 007',
           location: [55.751574, 37.573856],
+          owner: true,
           number: 'X123QW37',
         },
       ]
